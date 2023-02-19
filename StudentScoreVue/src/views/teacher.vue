@@ -1,0 +1,133 @@
+<template>
+    <div>
+        <header class="admin-header">
+            <div id="title">Student Score</div>
+            <div>
+                <el-icon size="2rem">
+                    <DArrowLeft />
+                </el-icon>
+            </div>
+            <div>
+                <el-icon size="1.5rem" id="flag">
+                    <User style="width:1em;height:1em;" />
+                </el-icon>
+            </div>
+        </header>
+        <div class="admin-body">
+            <div >
+                <el-menu :unique-opened="true" router id="menu">
+                    <el-menu-item index="/teacher">
+                        <el-icon>
+                                <Discount />
+                        </el-icon>个人信息管理</el-menu-item>
+                    <el-sub-menu index="1">
+                        <template #title>
+                            <el-icon>
+                                <Setting />
+                            </el-icon>
+                            <span>成绩模块</span>
+                        </template>
+                        <el-menu-item index="/role">成绩管理</el-menu-item>
+                        <el-menu-item index="/user">考试</el-menu-item>
+                        <el-menu-item index="/house">班级</el-menu-item>
+                    </el-sub-menu>
+                    <el-sub-menu index="2">
+                        <template #title>
+                            <el-icon>
+                                <User />
+                            </el-icon>
+                            <span>统计模块</span>
+                        </template>
+                        <el-menu-item index="2-1">及格率统计</el-menu-item>
+                        <el-menu-item index="2-2">平均分数统计</el-menu-item>
+                    </el-sub-menu>
+
+                </el-menu>
+            </div>
+            <div>
+                <transition name="el-zoom-in-top">
+                <router-view></router-view>
+                </transition>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { reactive, ref } from '@vue/reactivity';
+import { useRoute } from 'vue-router'
+import teacherApi from "../api/teacher.js";
+import { onMounted } from '@vue/runtime-core';
+
+// const teaId = sessionStorage.getItem("id");
+// const teacher=teacherApi.get(teaId)
+
+
+const teaId=parseInt(sessionStorage.getItem("id"))
+let teacher;
+
+const getTeacher= ()=>{
+    teacherApi.get(teaId).then((r)=>{
+        if(r.data.ok){
+            teacher=r.data.data
+            // console.log(teacher)
+            document.getElementById("flag").after(teacher.teaName) 
+            // sessionStorage.setItem("id",teaId)
+        }
+    })
+}
+
+
+getTeacher()
+
+
+
+
+</script>
+
+<style scoped>
+.admin-header {
+    width: 100%;
+    height: 100px;
+    display: grid;
+    grid-template-columns: 200px 50px 1fr;
+    background-color: var(--el-color-primary);
+    color: var(--el-color-white);
+    line-height: 50px;
+}
+
+#title{
+    line-height: 100px;
+}
+
+#menu{
+    height: 100%;
+}
+.admin-body {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    min-height: calc(100vh - 50px);
+}
+
+.admin-header>:nth-child(1) {
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    font-size: 1.2rem;
+
+}
+
+.admin-header>:nth-child(2) {
+    display: flex;
+    align-items: center;
+
+}
+
+.admin-header>:nth-child(3) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 2rem;
+
+}
+</style>

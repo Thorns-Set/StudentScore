@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.thorns.studentScore.mapper.TScoreMapper">
+    <resultMap id="scorerListDto" type="top.thorns.studentScore.dto.ScoreLIstDto">
+        <result column="score_id" javaType="int" property="scoreId"/>
+        <result column="stu_id" javaType="int" property="stuId"/>
+        <result column="stu_Name" javaType="string" property="stuName"/>
+        <result column="exam_name" javaType="string" property="examName"/>
+        <result column="class_name" javaType="string" property="className"/>
+        <result column="language_score" javaType="int" property="languageScore"/>
+        <result column="math_score" javaType="int" property="mathScore"/>
+        <result column="english_score" javaType="int" property="englishScore"/>
+        <result column="politics_score" javaType="int" property="politicsScore"/>
+        <result column="history_score" javaType="int" property="historyScore"/>
+        <result column="geog_score" javaType="int" property="geogScore"/>
+        <result column="total_points" javaType="int" property="totalPoints"/>
+    </resultMap>
+    <!-- 根据考试编号分页查询考试成绩 -->
+    <!-- 根据考试编号分页查询考试成绩并排序  -->
+    <!-- 动态传入字段名和关键字使用$ 不进行预编译直接传入数据，使用#进行预编译 string类型会自带引号-->
+    <select id="scoreExamPage" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        select  s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from    t_score s,t_exam e,t_student stu,t_class c
+        where   s.stu_id=stu.stu_id AND
+                s.class_id=c.class_id and
+                s.exam_id=#{examId} and
+                s.exam_id=e.exam_id
+        group by    s.score_id
+        <if test="order!=null">
+        order by ${prop} ${order}
+        </if>
+        <if test="order==null">
+        order by s.score_id ASC
+        </if>
+        limit   #{currentPage},#{pageSize}
+    </select>
+    <!--  根据考试编号查询总记录数  -->
+    <select id="selectPageTotal" resultType="int">
+        select COUNT(*)
+        from t_score
+        where exam_id=#{examId}
+    </select>
+    <!--  根据学生姓名和考试编号查询具体成绩信息  -->
+    <select id="selectByStuNameScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        select  s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,
+                SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from    t_score s,t_exam e,t_student stu,t_class c
+        where
+            stu.stu_id=s.stu_id and
+            s.exam_id=e.exam_id and
+            s.exam_id=  #{examId} and
+            s.class_id=c.class_id and
+                stu.stu_name in (SELECT stu.stu_name
+                                 FROM t_student stu
+                                 WHERE stu.stu_name LIKE #{stuName})
+        group by s.stu_id
+    </select>
+
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.thorns.studentScore.mapper.TTeacherMapper">
+    <select id="selectByIdPassword" resultType="string">
+        select tea_password
+        from t_teacher
+        where tea_id=#{id}
+    </select>
+    <update id="updateByIdPassword">
+        update t_teacher
+        set tea_password=#{password}
+        where tea_id=#{id}
+    </update>
+</mapper>
