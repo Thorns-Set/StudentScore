@@ -55,5 +55,61 @@
                                  WHERE stu.stu_name LIKE #{stuName})
         group by s.stu_id
     </select>
-
+    <!--  根据考试编号和班级编号查询成绩  -->
+    <select id="selectByClassIdExamIdScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        SELECT s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from t_score s,t_exam e,t_student stu,t_class c
+        WHERE
+              <if test="examId!=null">
+                  e.exam_id =#{examId} and
+              </if>
+              <if test="classId!=null">
+                  c.class_id=#{classId} and
+                  s.class_id=c.class_id and
+              </if>
+              <if test="classId==null">
+                  c.class_id in(
+                  SELECT c.class_id
+                  from t_teacher t,t_relation r,t_class c
+                  where t.tea_id=#{teaId} AND
+                        t.tea_id=r.tea_id AND
+                        r.class_id=c.class_id) and
+                  s.class_id=c.class_id and
+              </if>
+              s.exam_id=e.exam_id and
+              s.stu_id=stu.stu_id
+        GROUP BY s.score_id
+        <if test="order!=null and order.length()>0">
+            order by ${prop} ${order}
+        </if>
+        <if test="order==null || order.length()==0">
+            order by s.score_id ASC
+        </if>
+        limit   #{currentPage},#{pageSize}
+    </select>
+    <!--  有考试编号没有班级编号  -->
+    <select id="examIdTotal" resultType="int">
+        select COUNT(*)
+        from t_score s
+        where s.exam_id=#{examId} and
+                s.class_id in(
+                SELECT c.class_id
+                from t_teacher t,t_relation r,t_class c
+                where t.tea_id=#{teaId} AND
+                    t.tea_id=r.tea_id AND
+                    r.class_id=c.class_id)
+    </select>
+    <!--  有班级编号没有考试编号  -->
+    <select id="classIdTotal" resultType="int">
+        select count(*)
+        from t_score s
+        where s.class_id=#{classId}
+    </select>
+    <!--  根据班级编号和考试编号查询  -->
+    <select id="examIdClassIdTotal" resultType="int">
+        select count(*)
+        from t_score s
+        where s.class_id=#{classId} and
+              s.exam_id=#{examId}
+    </select>
 </mapper>

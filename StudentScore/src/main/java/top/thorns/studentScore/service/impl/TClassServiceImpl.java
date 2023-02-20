@@ -1,10 +1,14 @@
 package top.thorns.studentScore.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.entity.TClass;
 import top.thorns.studentScore.mapper.TClassMapper;
 import top.thorns.studentScore.service.ITClassService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class TClassServiceImpl extends ServiceImpl<TClassMapper, TClass> implements ITClassService {
 
+    @Autowired
+    private TClassMapper tClassMapper;
+
+
+    @Override
+    public List<TClass> selectByTeaIdList(Integer teaId) {
+        List<TClass> list=tClassMapper.selectByTeaIdList(teaId);
+
+        //没有查询到班级信息则抛出异常
+        if (list.size()==0){
+            throw new LoginException(1,"该老师暂无所教班级");
+        }
+
+        return list;
+    }
 }

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.thorns.studentScore.mapper.TClassMapper">
-
+    <select id="selectByTeaIdList" resultType="top.thorns.studentScore.entity.TClass">
+        SELECT c.*
+        from t_teacher t,t_relation r,t_class c
+        where t.tea_id=#{teaId} AND
+            t.tea_id=r.tea_id AND
+            r.class_id=c.class_id
+    </select>
 </mapper>

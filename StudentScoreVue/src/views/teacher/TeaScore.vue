@@ -74,13 +74,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive ,getCurrentInstance} from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import scoreApi from "../../api/score"
 import examApi from "../../api/exam"
 import { Search } from '@element-plus/icons-vue'
-
-const internalInstance = getCurrentInstance()
 
 
 //接收查询出来的成绩数据 并跟表格数据绑定
@@ -152,19 +150,27 @@ const handleChange=(val)=>{
 }
 
 const selectByExamId=()=>{
-  console.log(examId.value.type)
+  // console.log(examId.value.type)
   pageNow=1
-  scorePage(examId.value)
+  if(examId.value==null){
+    ElMessage.error("请先选择考试信息")
+  }else{
+    scorePage()
+  }
   openF()
 }
 
 //成绩排序方法
 const scorePageSort=()=>{
+  if(examId.value==null){
+    ElMessage.error("请先选择考试信息")
+    return
+  }
   scoreApi.selectAllPageSort(examId.value,pageNow,size,sortName,order)
     .then((r)=>{
       if(r.data.ok){
-      scoreList.list=r.data.data.list
-      total=r.data.data.total
+        scoreList.list=r.data.data.list
+        total=r.data.data.total
       }
     })
 }
@@ -231,10 +237,9 @@ const selectStuScore=()=>{
   }else{
     scoreApi.selectByStuNameScore(examId.value,stuName.value)
     .then((r)=>{
-      // console.log(r.data)
       if(r.data.ok){
-        scoreList.list=r.data.data
-        total=1
+        scoreList.list=r.data.data.list
+        total=r.data.data.total
       }else{
         ElMessage.error(r.data.message)
       }

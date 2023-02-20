@@ -27,22 +27,28 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
     @Autowired
     private TScoreMapper tScoreMapper;
 
+    public static String universalMethod(String sortName){
+        String prop="";
+        for (int i = 0; i < sortName.length(); i++) {
+            if (Character.isUpperCase(sortName.charAt(i))){
+                String temp=sortName.toLowerCase();
+                String flag=temp.substring(0,i)+"_"+temp.substring(i);
+                if (flag.equals("total_points")){
+                    prop=flag;
+                }else {
+                    prop="s."+flag;
+                }
+            }
+        }
+        return prop;
+    }
+
     @Override
     public List<ScoreLIstDto> selectScoreExamPage(Integer examId,Integer pageNow,Integer size,String sortName,String order) {
         int currentPage=(pageNow-1)*size;
-        String prop="";
+        String prop = "";
         if (sortName!=null){
-            for (int i = 0; i < sortName.length(); i++) {
-                if (Character.isUpperCase(sortName.charAt(i))){
-                    String temp=sortName.toLowerCase();
-                    String flag=temp.substring(0,i)+"_"+temp.substring(i);
-                    if (flag.equals("total_points")){
-                        prop=flag;
-                    }else {
-                        prop="s."+flag;
-                    }
-                }
-            }
+           prop=universalMethod(sortName);
         }
         log.info("currentPage:"+currentPage);
         log.info("examId:"+examId);
@@ -62,4 +68,16 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
         }
         return scoreLIstDto;
     }
+
+    @Override
+    public List<ScoreLIstDto> selectByClassIdExamIdScore(Integer teaId,Integer examId, Integer classId, Integer pageNow, Integer size, String sortName, String order) {
+        int currentPage=(pageNow-1)*size;
+        String prop = "";
+        if (sortName!=null){
+            prop=universalMethod(sortName);
+        }
+        return tScoreMapper.selectByClassIdExamIdScore(teaId,examId, classId, currentPage, size, prop, order);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.R;
+import top.thorns.studentScore.dto.ClassExamScoreListDto;
 import top.thorns.studentScore.dto.Page;
 import top.thorns.studentScore.dto.ScoreLIstDto;
 import top.thorns.studentScore.entity.TScore;
@@ -70,5 +71,23 @@ public class TScoreController {
         }catch (LoginException e){
             return R.error().setMessage(e.getMessage());
         }
+    }
+
+    @PostMapping("classIdExamIdScore")
+    public R selectByClassIdExamIdScore(@RequestBody ClassExamScoreListDto dto){
+        Page<ScoreLIstDto> page=new Page<>();
+        List<ScoreLIstDto> list;
+        log.info(dto.toString());
+        list=itScoreService.selectByClassIdExamIdScore(dto.getTeaId(),dto.getExamId(),dto.getClassId(),dto.getPageNow() , dto.getSize(),dto.getSortName(),dto.getOrder());
+        page.setList(list);
+        //获取总记录数
+        if (dto.getExamId()==null){
+            page.setTotal(tScoreMapper.classIdTotal(dto.getClassId()));
+        }else if(dto.getClassId()==null){
+            page.setTotal(tScoreMapper.examIdTotal(dto.getExamId(), dto.getTeaId()));
+        }else {
+            page.setTotal(tScoreMapper.examIdClassIdTotal(dto.getExamId(),dto.getClassId()));
+        }
+        return R.ok().setData(page);
     }
 }

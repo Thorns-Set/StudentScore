@@ -3,6 +3,8 @@ package top.thorns.studentScore.service;
 import top.thorns.studentScore.entity.TClass;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITClassService extends IService<TClass> {
 
+    List<TClass> selectByTeaIdList(Integer teaId);
 }

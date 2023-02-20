@@ -6,9 +6,11 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.thorns.studentScore.dto.ScoreLIstDto;
+import top.thorns.studentScore.entity.TClass;
 import top.thorns.studentScore.entity.TScore;
 import top.thorns.studentScore.entity.TStudent;
 import top.thorns.studentScore.entity.TTeacher;
+import top.thorns.studentScore.mapper.TClassMapper;
 import top.thorns.studentScore.mapper.TScoreMapper;
 import top.thorns.studentScore.mapper.TTeacherMapper;
 import top.thorns.studentScore.service.ITStudentService;
@@ -26,6 +28,9 @@ class StudentScoreApplicationTests {
 
     @Autowired
     private TScoreMapper tScoreMapper;
+
+    @Autowired
+    private TClassMapper tClassMapper;
 
     //测试mapper接口根据id查询功能
     @Test
@@ -97,4 +102,9 @@ class StudentScoreApplicationTests {
         System.out.println(tScore);
     }
 
+    @Test
+    void classMapperTest(){
+        List<TClass> list=tClassMapper.selectByTeaIdList(1);
+        System.out.println(list);
+    }
 }

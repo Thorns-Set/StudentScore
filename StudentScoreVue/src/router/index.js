@@ -43,12 +43,12 @@ const routes = [
             {
                 path:"/role",
                 component: () => import("../views/teacher/TeaScore.vue"),
-                meta: { title: "成绩管理"},
+                meta: { title: "全校成绩查询"},
             },
             {
                 path:"/user",
-                component: () => import("../views/teacher/User.vue"),
-                meta: { title: "用户管理"},
+                component: () => import("../views/teacher/ClassScore.vue"),
+                meta: { title: "班级成绩管理"},
             },
             {
                 path:"/house",

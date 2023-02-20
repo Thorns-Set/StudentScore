@@ -27,8 +27,8 @@
                             </el-icon>
                             <span>成绩模块</span>
                         </template>
-                        <el-menu-item index="/role">成绩管理</el-menu-item>
-                        <el-menu-item index="/user">考试</el-menu-item>
+                        <el-menu-item index="/role">全校成绩查询</el-menu-item>
+                        <el-menu-item index="/user">班级成绩管理</el-menu-item>
                         <el-menu-item index="/house">班级</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="2">
