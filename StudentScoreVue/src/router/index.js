@@ -33,11 +33,11 @@ const routes = [
     {   
         path:'/TeaAdmin',
         component: () => import("../views/teacher.vue"),
-        meta: { title: "管理后台", auth: true },
+        meta: { title: "老师管理后台", auth: true },
         children: [
             {
                 path:"/teacher",
-                component: () => import("../views/teacher/Welcome.vue"),
+                component: () => import("../views/teacher/TeaInfo.vue"),
                 meta: { title: "个人主页"},
             },
             {
@@ -51,9 +51,9 @@ const routes = [
                 meta: { title: "班级成绩管理"},
             },
             {
-                path:"/house",
-                component: () => import("../views/teacher/House.vue"),
-                meta:{ title:"房产信息管理"}
+                path:"/passrate",
+                component: () => import("../views/teacher/TeaPassRateStatistics.vue"),
+                meta:{ title:"及格率统计"}
             },
           
         ]

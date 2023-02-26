@@ -29,19 +29,20 @@ public class LoginController {
 
     /**
      * 登录验证
+     *
      * @param user
      * @param password
      * @return
      */
     @PostMapping("teaLogin")
     public R TeaLogin(@NotBlank(message = "教职工编号不能为空")
-                                  Integer user,
+                              Integer user,
                       @NotEmpty(message = "密码不能为空")
-                                  String password){
+                              String password) {
         try {
-            TTeacher tTeacher=itTeacherService.login(user,password);
+            TTeacher tTeacher = itTeacherService.login(user, password);
             return R.ok().setData(tTeacher);
-        }catch (LoginException ex){
+        } catch (LoginException ex) {
             return R.error().setMessage(ex.getMessage());
         }
     }

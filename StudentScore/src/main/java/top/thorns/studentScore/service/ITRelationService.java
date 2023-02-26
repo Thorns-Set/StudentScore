@@ -1,11 +1,11 @@
 package top.thorns.studentScore.service;
 
-import top.thorns.studentScore.entity.TRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.thorns.studentScore.entity.TRelation;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Thorns

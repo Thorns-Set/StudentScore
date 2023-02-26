@@ -19,65 +19,80 @@
     <!-- 根据考试编号分页查询考试成绩并排序  -->
     <!-- 动态传入字段名和关键字使用$ 不进行预编译直接传入数据，使用#进行预编译 string类型会自带引号-->
     <select id="scoreExamPage" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
-        select  s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
-        from    t_score s,t_exam e,t_student stu,t_class c
-        where   s.stu_id=stu.stu_id AND
-                s.class_id=c.class_id and
-                s.exam_id=#{examId} and
-                s.exam_id=e.exam_id
-        group by    s.score_id
+        select
+        s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from t_score s,t_exam e,t_student stu,t_class c
+        where s.stu_id=stu.stu_id AND
+        s.class_id=c.class_id and
+        s.exam_id=#{examId} and
+        s.exam_id=e.exam_id
+        group by s.score_id
         <if test="order!=null">
-        order by ${prop} ${order}
+            order by ${prop} ${order}
         </if>
         <if test="order==null">
-        order by s.score_id ASC
+            order by s.score_id ASC
         </if>
-        limit   #{currentPage},#{pageSize}
+        limit #{currentPage},#{pageSize}
     </select>
     <!--  根据考试编号查询总记录数  -->
     <select id="selectPageTotal" resultType="int">
         select COUNT(*)
         from t_score
-        where exam_id=#{examId}
+        where exam_id = #{examId}
     </select>
     <!--  根据学生姓名和考试编号查询具体成绩信息  -->
     <select id="selectByStuNameScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
-        select  s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,
-                SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
-        from    t_score s,t_exam e,t_student stu,t_class c
-        where
-            stu.stu_id=s.stu_id and
-            s.exam_id=e.exam_id and
-            s.exam_id=  #{examId} and
-            s.class_id=c.class_id and
-                stu.stu_name in (SELECT stu.stu_name
-                                 FROM t_student stu
-                                 WHERE stu.stu_name LIKE #{stuName})
+        select s.score_id,
+               s.stu_id,
+               stu.stu_name,
+               e.exam_name,
+               c.class_name,
+               s.language_score,
+               s.math_score,
+               s.english_score,
+               s.politics_score,
+               s.history_score,
+               s.geog_score,
+               SUM(s.language_score + s.math_score + s.english_score + s.politics_score + s.history_score +
+                   s.geog_score) total_points
+        from t_score s,
+             t_exam e,
+             t_student stu,
+             t_class c
+        where stu.stu_id = s.stu_id
+          and s.exam_id = e.exam_id
+          and s.exam_id = #{examId}
+          and s.class_id = c.class_id
+          and stu.stu_name in (SELECT stu.stu_name
+                               FROM t_student stu
+                               WHERE stu.stu_name LIKE #{stuName})
         group by s.stu_id
     </select>
     <!--  根据考试编号和班级编号查询成绩  -->
     <select id="selectByClassIdExamIdScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
-        SELECT s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        SELECT
+        s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
         from t_score s,t_exam e,t_student stu,t_class c
         WHERE
-              <if test="examId!=null">
-                  e.exam_id =#{examId} and
-              </if>
-              <if test="classId!=null">
-                  c.class_id=#{classId} and
-                  s.class_id=c.class_id and
-              </if>
-              <if test="classId==null">
-                  c.class_id in(
-                  SELECT c.class_id
-                  from t_teacher t,t_relation r,t_class c
-                  where t.tea_id=#{teaId} AND
-                        t.tea_id=r.tea_id AND
-                        r.class_id=c.class_id) and
-                  s.class_id=c.class_id and
-              </if>
-              s.exam_id=e.exam_id and
-              s.stu_id=stu.stu_id
+        <if test="examId!=null">
+            e.exam_id =#{examId} and
+        </if>
+        <if test="classId!=null">
+            c.class_id=#{classId} and
+            s.class_id=c.class_id and
+        </if>
+        <if test="classId==null">
+            c.class_id in(
+            SELECT c.class_id
+            from t_teacher t,t_relation r,t_class c
+            where t.tea_id=#{teaId} AND
+            t.tea_id=r.tea_id AND
+            r.class_id=c.class_id) and
+            s.class_id=c.class_id and
+        </if>
+        s.exam_id=e.exam_id and
+        s.stu_id=stu.stu_id
         GROUP BY s.score_id
         <if test="order!=null and order.length()>0">
             order by ${prop} ${order}
@@ -85,31 +100,98 @@
         <if test="order==null || order.length()==0">
             order by s.score_id ASC
         </if>
-        limit   #{currentPage},#{pageSize}
+        limit #{currentPage},#{pageSize}
     </select>
     <!--  有考试编号没有班级编号  -->
     <select id="examIdTotal" resultType="int">
         select COUNT(*)
         from t_score s
-        where s.exam_id=#{examId} and
-                s.class_id in(
-                SELECT c.class_id
-                from t_teacher t,t_relation r,t_class c
-                where t.tea_id=#{teaId} AND
-                    t.tea_id=r.tea_id AND
-                    r.class_id=c.class_id)
+        where s.exam_id = #{examId}
+          and s.class_id in (
+            SELECT c.class_id
+            from t_teacher t,
+                 t_relation r,
+                 t_class c
+            where t.tea_id = #{teaId}
+              AND t.tea_id = r.tea_id
+              AND r.class_id = c.class_id)
     </select>
     <!--  有班级编号没有考试编号  -->
     <select id="classIdTotal" resultType="int">
         select count(*)
         from t_score s
-        where s.class_id=#{classId}
+        where s.class_id = #{classId}
     </select>
     <!--  根据班级编号和考试编号查询  -->
     <select id="examIdClassIdTotal" resultType="int">
         select count(*)
         from t_score s
-        where s.class_id=#{classId} and
-              s.exam_id=#{examId}
+        where s.class_id = #{classId}
+          and s.exam_id = #{examId}
+    </select>
+    <!--  根据班级编号考试编号和学生姓名模糊查询成绩  -->
+    <select id="byClassIdExamIdStuNameSelectScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        select
+        s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,
+        SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from t_score s,t_exam e,t_student stu,t_class c
+        where stu.stu_id=s.stu_id and
+        s.exam_id=e.exam_id and
+        <if test="examId!=null">
+            s.exam_id= #{examId} and
+        </if>
+        <if test="classId!=null">
+            s.class_id=#{classId} and
+        </if>
+        <if test="classId==null">
+            c.class_id in(
+            SELECT c.class_id
+            from t_teacher t,t_relation r,t_class c
+            where t.tea_id=#{teaId} AND
+            t.tea_id=r.tea_id AND
+            r.class_id=c.class_id) and
+        </if>
+        s.class_id=c.class_id and
+        stu.stu_name in (SELECT stu.stu_name
+        FROM t_student stu
+        WHERE stu.stu_name LIKE #{stuName})
+        group by s.score_id
+    </select>
+    <!--  根据成绩编号查询所对应班级编号  -->
+    <select id="selectClassIdByScoreId" resultType="int">
+        select t.class_id
+        from t_score t
+        where t.score_id = #{scoerId}
+    </select>
+    <!--  根据成绩编号查询所对应考试编号  -->
+    <select id="selectExamIdByScoreId" resultType="int">
+        select t.exam_id
+        from t_score t
+        where t.score_id = #{scoerId}
+    </select>
+    <!--  根据班级编号和考试编号查询各科及格人数  -->
+    <select id="selectPassNum" resultType="top.thorns.studentScore.dto.PassNum">
+        SELECT COUNT(*) as total,
+               COUNT(IF(t.language_score > 60, TRUE, NULL)) AS languageNum,
+               COUNT(IF(t.math_score > 60, TRUE, NULL))     AS mathNum,
+               COUNT(IF(t.english_score > 60, TRUE, NULL))  AS englishNum,
+               COUNT(IF(t.politics_score > 60, TRUE, NULL)) AS politicsNum,
+               COUNT(IF(t.history_score > 60, TRUE, NULL))  AS historyNum,
+               COUNT(IF(t.geog_score > 60, TRUE, NULL))     AS geogNum
+        from t_score t
+        WHERE t.class_id = #{classId}
+          and t.exam_id = #{examId}
+    </select>
+    <!--  根据班级编号和考试编号获取各科及格率  -->
+    <select id="selectPassRate" resultType="top.thorns.studentScore.dto.PassRate">
+        SELECT CONVERT(COUNT(IF(t.language_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1)) AS languagePassRate,
+               CONVERT(COUNT(IF(t.math_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1))  AS mathPassRate,
+               CONVERT(COUNT(IF(t.english_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1))  AS englishPassRate,
+               CONVERT(COUNT(IF(t.politics_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1)) AS politicsPassRate,
+               CONVERT(COUNT(IF(t.history_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1))  AS historyPassRate,
+               CONVERT(COUNT(IF(t.geog_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1))  AS geogPassRate
+        from t_score t
+        WHERE t.class_id = #{classId}
+          and t.exam_id = #{examId}
     </select>
 </mapper>

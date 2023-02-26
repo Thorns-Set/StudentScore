@@ -34,7 +34,7 @@ public class ScoreLIstDto {
     /**
      * 班级名称
      */
-    private  Integer className;
+    private Integer className;
 
     /**
      * 语文成绩

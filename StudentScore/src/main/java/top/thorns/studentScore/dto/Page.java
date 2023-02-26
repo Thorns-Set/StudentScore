@@ -12,7 +12,7 @@ import java.util.List;
  * @Description: 分页查询返回集
  **/
 @Data
-public class Page <T>{
+public class Page<T> {
     /**
      * 总条数
      */

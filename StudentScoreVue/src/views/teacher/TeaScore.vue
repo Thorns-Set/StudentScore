@@ -6,19 +6,14 @@
           <span>成绩管理</span>
           <el-button type="primary" class="button" @click="selectByExamId" style="margin-left: -360px;">返回成绩列表</el-button>
           <el-row :gutter="20" style="margin-right: -360px;margin-left: -150px;">
-            <el-input
-              v-model="stuName"
-              class="w-50 m-2"
-              placeholder="请输入学生姓名"
-              :prefix-icon="Search"
-            />
+            <el-input v-model="stuName" class="w-50 m-2" placeholder="请输入学生姓名" :prefix-icon="Search" />
           </el-row>
           <el-button type="primary" class="button" @click="selectStuScore">查询</el-button>
           <el-button type="primary" class="button" @click="openT">选择考试信息</el-button>
         </div>
       </template>
       <el-table :data="scoreList.list" style="width: 100%" @sort-change="sortTable">
-          <!-- pror要跟传递过来的数据字段名相同 -->
+        <!-- pror要跟传递过来的数据字段名相同 -->
         <el-table-column fixed prop="scoreId" label="成绩编号" width="100" />
         <el-table-column prop="stuId" label="学号" width="100" />
         <el-table-column prop="stuName" label="学生姓名" width="120" />
@@ -40,29 +35,17 @@
           </template>
         </el-table-column> -->
       </el-table>
-      <el-pagination
-      background 
-      style="padding-top: 15px"
-      @size-change="findSizeChange"
-      @current-change="findPage" 
-      v-model:current-page.sync="pageNow"
-      :page-sizes="[2,4,6,8,10]"
-      v-model:page-size="size"
-      layout="total, sizes, prev, pager, next, jumper"
-      v-model:total="total">
+      <el-pagination background style="padding-top: 15px" @size-change="findSizeChange" @current-change="findPage"
+        v-model:current-page.sync="pageNow" :page-sizes="[2, 4, 6, 8, 10]" v-model:page-size="size"
+        layout="total, sizes, prev, pager, next, jumper" v-model:total="total">
       </el-pagination>
     </el-card>
   </div>
 
-   <!-- 选择具体考试模态框 -->
-   <el-dialog v-model="dialogData.open" :title="dialogData.title" width="500px" draggable>
+  <!-- 选择具体考试模态框 -->
+  <el-dialog v-model="dialogData.open" :title="dialogData.title" width="500px" draggable>
     <el-select v-model="examId" filterable placeholder="请选择考试信息" @change="handleChange">
-      <el-option
-        v-for="item in examInfo.list"
-        :key="item.examId"
-        :label="item.examName"
-        :value="item.examId"
-      />
+      <el-option v-for="item in examInfo.list" :key="item.examId" :label="item.examName" :value="item.examId" />
     </el-select>
     <template #footer>
       <span class="dialog-footer">
@@ -82,16 +65,16 @@ import { Search } from '@element-plus/icons-vue'
 
 
 //接收查询出来的成绩数据 并跟表格数据绑定
-const scoreList=reactive({ list:[] })
+const scoreList = reactive({ list: [] })
 
 
 //设置初始分页信息
-  // 每页显示条目个数
-let size=10
-  // 总条目数
-let total=0
-  //当前页数
-let pageNow=1
+// 每页显示条目个数
+let size = 10
+// 总条目数
+let total = 0
+//当前页数
+let pageNow = 1
 //排序字段名
 let sortName
 //排序方法
@@ -99,98 +82,98 @@ let order
 
 
 //成绩分页方法
-const scorePage=()=>{
-  scoreApi.selectAllPage(examId.value,pageNow,size)
-  .then((r)=>{
-    // console.log(r);
-    if(r.data.ok){
-      scoreList.list=r.data.data.list
-      total=r.data.data.total
-      // console.log(scoreList.list.classId)
-      // console.log(scoreList.list)
-      // console.log("page"+total)
-    }
-  })
+const scorePage = () => {
+  scoreApi.selectAllPage(examId.value, pageNow, size)
+    .then((r) => {
+      // console.log(r);
+      if (r.data.ok) {
+        scoreList.list = r.data.data.list
+        total = r.data.data.total
+        // console.log(scoreList.list.classId)
+        // console.log(scoreList.list)
+        // console.log("page"+total)
+      }
+    })
 }
 
 //接收查询出来的考试信息
-const examInfo=reactive({ list:[] })
+const examInfo = reactive({ list: [] })
 
 //查询考试信息
-examApi.selectAllExam().then((r)=>{
-  examInfo.list=r.data.data
+examApi.selectAllExam().then((r) => {
+  examInfo.list = r.data.data
   // console.log(examInfo.list)
 })
 
 
 //选择的考试编号
-const examId=ref()
+const examId = ref()
 
 //模态框基础值
 const dialog = {
   open: true,
   title: "请选择具体考试信息",
-  readonly:false,
+  readonly: false,
 };
 
 const dialogData = reactive(JSON.parse(JSON.stringify(dialog)));
 
 
-const openT=()=>{
-  dialogData.open=true
+const openT = () => {
+  dialogData.open = true
   console.log(dialogData.open)
 }
-const openF=()=>{
-  dialogData.open=false
+const openF = () => {
+  dialogData.open = false
 }
 
 //当选择下拉框选中值发生变化时触发该事件
-const handleChange=(val)=>{
+const handleChange = (val) => {
   // console.log(examId.value)
 }
 
-const selectByExamId=()=>{
+const selectByExamId = () => {
   // console.log(examId.value.type)
-  pageNow=1
-  if(examId.value==null){
+  pageNow = 1
+  if (examId.value == null) {
     ElMessage.error("请先选择考试信息")
-  }else{
+  } else {
     scorePage()
   }
   openF()
 }
 
 //成绩排序方法
-const scorePageSort=()=>{
-  if(examId.value==null){
+const scorePageSort = () => {
+  if (examId.value == null) {
     ElMessage.error("请先选择考试信息")
     return
   }
-  scoreApi.selectAllPageSort(examId.value,pageNow,size,sortName,order)
-    .then((r)=>{
-      if(r.data.ok){
-        scoreList.list=r.data.data.list
-        total=r.data.data.total
+  scoreApi.selectAllPageSort(examId.value, pageNow, size, sortName, order)
+    .then((r) => {
+      if (r.data.ok) {
+        scoreList.list = r.data.data.list
+        total = r.data.data.total
       }
     })
 }
 
 //对表单数据进行排序
-const sortTable=(custom)=>{
+const sortTable = (custom) => {
   // console.log(custom)
-  sortName=custom.prop
-  if (custom.order=="ascending") {
-    order="ASC"
-    pageNow=1
+  sortName = custom.prop
+  if (custom.order == "ascending") {
+    order = "ASC"
+    pageNow = 1
     scorePageSort()
     // console.log(order)
-  }else if(custom.order=="descending"){
-    order="DESC"
-    pageNow=1
+  } else if (custom.order == "descending") {
+    order = "DESC"
+    pageNow = 1
     scorePageSort()
     // console.log(order)
-  }else{
-    order=null
+  } else {
+    order = null
     scorePage()
     // console.log(order)
     // console.log(custom)
@@ -202,51 +185,49 @@ const sortTable=(custom)=>{
 // });
 
 //改变每页条数size时调用
-const findSizeChange=(size)=>{
-    console.log("当每页条数改变的时候" + size);
-    if(order!=null){
-      scorePageSort()
-    }else{
-      scorePage()
-    }
+const findSizeChange = (size) => {
+  console.log("当每页条数改变的时候" + size);
+  if (order != null) {
+    scorePageSort()
+  } else {
+    scorePage()
+  }
 }
 
 //页码pageNow发生改变时调用
-const findPage=()=>{
+const findPage = () => {
   console.log(pageNow)
-  if(order!=null){
+  if (order != null) {
     scorePageSort()
-  }else{
+  } else {
     scorePage()
   }
 }
 
 //定义查询框绑定的姓名
-const stuName=ref("")
+const stuName = ref("")
 
 //根据学生姓名和考试id查询学生具体成绩方法
-const selectStuScore=()=>{
+const selectStuScore = () => {
   //对输入框进行非空判断和空格判断
   // console.log(examId.value)
-  if(examId.value==null){
+  if (examId.value == null) {
     ElMessage.error("请先选择考试编号")
     return
   }
-  if(stuName.value=='' || stuName.value.split(" ").join("").length == 0){
+  if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {
     ElMessage.error("姓名不能为空！！！")
-  }else{
-    scoreApi.selectByStuNameScore(examId.value,stuName.value)
-    .then((r)=>{
-      if(r.data.ok){
-        scoreList.list=r.data.data.list
-        total=r.data.data.total
-      }else{
-        ElMessage.error(r.data.message)
-      }
-    })
+  } else {
+    scoreApi.selectByStuNameScore(examId.value, stuName.value)
+      .then((r) => {
+        if (r.data.ok) {
+          scoreList.list = r.data.data.list
+          total = r.data.data.total
+        } else {
+          ElMessage.error(r.data.message)
+        }
+      })
   }
-
-
 }
 
 </script>

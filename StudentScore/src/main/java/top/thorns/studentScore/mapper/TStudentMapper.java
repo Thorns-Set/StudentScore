@@ -1,18 +1,19 @@
 package top.thorns.studentScore.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import top.thorns.studentScore.entity.TStudent;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+import top.thorns.studentScore.entity.TStudent;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Thorns
  * @since 2022-11-16
  */
-@Mapper
+
+@Repository
 public interface TStudentMapper extends BaseMapper<TStudent> {
 
 }

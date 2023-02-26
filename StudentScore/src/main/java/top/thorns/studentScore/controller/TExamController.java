@@ -10,7 +10,7 @@ import top.thorns.studentScore.service.ITExamService;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Thorns
@@ -27,10 +27,11 @@ public class TExamController {
 
     /**
      * 获取所有考试信息
+     *
      * @return
      */
     @GetMapping("allExam")
-    public R selectExamAll(){
+    public R selectExamAll() {
         return R.ok().setData(tExamMapper.selectList(null));
     }
 

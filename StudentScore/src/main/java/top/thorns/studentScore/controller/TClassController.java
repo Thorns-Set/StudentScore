@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Thorns
@@ -30,11 +30,11 @@ public class TClassController {
     private ITClassService itClassService;
 
     @GetMapping("{teaId}")
-    public R byTeaIdList(@PathVariable Integer teaId){
+    public R byTeaIdList(@PathVariable Integer teaId) {
         try {
-            List<TClass> list=itClassService.selectByTeaIdList(teaId);
+            List<TClass> list = itClassService.selectByTeaIdList(teaId);
             return R.ok().setData(list);
-        }catch (LoginException e){
+        } catch (LoginException e) {
             return R.error().setMessage(e.getMessage());
         }
     }

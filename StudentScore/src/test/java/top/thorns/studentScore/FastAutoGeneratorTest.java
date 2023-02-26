@@ -2,7 +2,6 @@ package top.thorns.studentScore;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +16,8 @@ import java.util.List;
 public class FastAutoGeneratorTest {
 
     public static void main(String[] args) {
-        String url="jdbc:mysql://localhost:3306/student_score?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8";
-        FastAutoGenerator.create(url,"root","abcd1234")
+        String url = "jdbc:mysql://localhost:3306/student_score?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8";
+        FastAutoGenerator.create(url, "root", "abcd1234")
                 // 全局配置
                 .globalConfig((scanner, builder) -> builder.author(scanner.apply("请输入作者名称？")).fileOverride())
                 // 包配置
@@ -34,6 +33,7 @@ public class FastAutoGeneratorTest {
                  */
                 .execute();
     }
+
     // 处理 all 情况
     protected static List<String> getTables(String tables) {
         return "all".equals(tables) ? Collections.emptyList() : Arrays.asList(tables.split(","));

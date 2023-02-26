@@ -19,9 +19,9 @@ import org.springframework.context.annotation.Configuration;
 public class MybatisPlusConfig {
 
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor(){
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
         //用来配置mybatis plus的插件
-        MybatisPlusInterceptor interceptor=new MybatisPlusInterceptor();
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         //调用方法添加内部插件  此处添加分页插件
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
 

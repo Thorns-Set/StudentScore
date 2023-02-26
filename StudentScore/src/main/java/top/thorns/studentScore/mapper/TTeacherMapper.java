@@ -1,13 +1,13 @@
 package top.thorns.studentScore.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.thorns.studentScore.entity.TTeacher;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author Thorns
@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 public interface TTeacherMapper extends BaseMapper<TTeacher> {
     /**
      * 根据id查询密码
+     *
      * @param id
      * @return
      */
@@ -25,9 +26,10 @@ public interface TTeacherMapper extends BaseMapper<TTeacher> {
 
     /**
      * 根据id修改密码
+     *
      * @param id
      * @param password
      * @return
      */
-    int updateByIdPassword(@Param("id") Integer id,@Param("password") String password);
+    int updateByIdPassword(@Param("id") Integer id, @Param("password") String password);
 }

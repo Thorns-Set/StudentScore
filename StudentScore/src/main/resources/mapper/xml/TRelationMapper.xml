@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.thorns.studentScore.mapper.TRelationMapper">
-
+    <!--  根据老师编号和班级编号查询老师所教授课程  -->
+    <select id="selectCourseByTeaIdClassId" resultType="string">
+        SELECT c.course_field
+        from t_relation r,
+             t_course c
+        where r.class_id = #{classId}
+          and r.tea_id = #{teaId}
+          and r.course_id = c.course_id
+    </select>
+    <!--  根据老师编号查询其所教全部课程  -->
+    <select id="selectCourseAllByTeaId" resultType="string">
+        SELECT c.course_name
+        from t_relation r,
+             t_course c
+        where r.tea_id = #{teaId}
+          and r.course_id = c.course_id
+        GROUP BY c.course_name
+    </select>
 </mapper>
