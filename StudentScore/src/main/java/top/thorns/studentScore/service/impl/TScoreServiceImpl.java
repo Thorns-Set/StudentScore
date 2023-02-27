@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.thorns.studentScore.LoginException;
+import top.thorns.studentScore.dto.PassNum;
 import top.thorns.studentScore.dto.PassRate;
 import top.thorns.studentScore.dto.ScoreLIstDto;
 import top.thorns.studentScore.entity.TScore;
@@ -93,16 +94,29 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
 
     @Override
     public float[] selectPassRate(Integer examId, Integer classId) {
-        PassRate passRate=tScoreMapper.selectPassRate(examId, classId);
+        PassRate passRate = tScoreMapper.selectPassRate(examId, classId);
 //        将对象类型数据转换为数组
-        float[] arr=new float[6];
-        arr[0]=passRate.getLanguagePassRate();
-        arr[1]=passRate.getMathPassRate();
-        arr[2]=passRate.getEnglishPassRate();
-        arr[3]=passRate.getPoliticsPassRate();
-        arr[4]=passRate.getHistoryPassRate();
-        arr[5]=passRate.getGeogPassRate();
+        float[] arr = new float[6];
+        arr[0] = passRate.getLanguagePassRate();
+        arr[1] = passRate.getMathPassRate();
+        arr[2] = passRate.getEnglishPassRate();
+        arr[3] = passRate.getPoliticsPassRate();
+        arr[4] = passRate.getHistoryPassRate();
+        arr[5] = passRate.getGeogPassRate();
         return arr;
+    }
+
+    @Override
+    public PassNum selectPassNum(Integer examId, Integer classId) {
+        PassNum passNum = tScoreMapper.selectPassNum(examId, classId);
+        //通过总数和及格人数分别计算出各科不及格人数
+        passNum.setGeogFlunk(passNum.getTotal() - passNum.getGeogNum());
+        passNum.setLanguageFlunk(passNum.getTotal() - passNum.getLanguageNum());
+        passNum.setMathFlunk(passNum.getTotal() - passNum.getMathNum());
+        passNum.setEnglishFlunk(passNum.getTotal() - passNum.getEnglishNum());
+        passNum.setPoliticsFlunk(passNum.getTotal() - passNum.getPoliticsNum());
+        passNum.setHistoryFlunk(passNum.getTotal() - passNum.getHistoryNum());
+        return passNum;
     }
 
 

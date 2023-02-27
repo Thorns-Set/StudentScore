@@ -39,6 +39,8 @@ public class TScoreController {
      * @param examId
      * @param pageNow
      * @param size
+     * @param sortName
+     * @param order
      * @return
      */
     //value属性设置两条路径分别对应简单查询成绩和排序查询成绩
@@ -123,7 +125,7 @@ public class TScoreController {
 
     @GetMapping("getPassNum/{examId}/{classId}")
     public R selectPassNum(@PathVariable("examId") Integer examId,@PathVariable("classId") Integer classId){
-        return R.ok().setData(tScoreMapper.selectPassNum(examId,classId));
+        return R.ok().setData(itScoreService.selectPassNum(examId, classId));
     }
 
     @GetMapping("getPassRate/{examId}/{classId}")
