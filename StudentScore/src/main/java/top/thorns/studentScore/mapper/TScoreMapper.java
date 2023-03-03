@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.thorns.studentScore.dto.PassNum;
 import top.thorns.studentScore.dto.PassRate;
+import top.thorns.studentScore.dto.ScoreAvgDto;
 import top.thorns.studentScore.dto.ScoreLIstDto;
+import top.thorns.studentScore.dto.scoreMax.*;
 import top.thorns.studentScore.entity.TScore;
 
 import java.util.List;
@@ -112,17 +114,92 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据班级编号和考试编号获取各科及格人数
+     *
      * @param examId
      * @param classId
      * @return
      */
-    PassNum selectPassNum(@Param("examId") Integer examId,@Param("classId") Integer classId);
+    PassNum selectPassNum(@Param("examId") Integer examId, @Param("classId") Integer classId);
 
     /**
      * 根据班级编号和考试编号获取各科及格率
+     *
      * @param examId
      * @param classId
      * @return
      */
-    PassRate selectPassRate(@Param("examId") Integer examId,@Param("classId") Integer classId);
+    PassRate selectPassRate(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出各科平均分数
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    ScoreAvgDto selectScoreAvg(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出语文最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<language> selectLanguageScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出数学最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<math> selectMathScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出总最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<total> selectTotalScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出英语最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<english> selectEnglishScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出政治最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<politics> selectPoliticsScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出历史最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<history> selectHistoryScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
+    /**
+     * 根据班级编号和考试编号查询出地理最高成绩
+     *
+     * @param examId
+     * @param classId
+     * @return
+     */
+    List<geog> selectGeogScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
+
 }

@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.thorns.studentScore.mapper.TStudentMapper">
-
-
+    <!--  根据教师编号分页查询其所教班级学生信息  -->
+    <select id="selectStuInfoByTeaIdPage" resultType="top.thorns.studentScore.entity.TStudent">
+        SELECT *
+        FROM t_student stu
+        WHERE stu.class_id in (
+            SELECT c.class_id
+            from t_teacher t,
+                 t_relation r,
+                 t_class c
+            where t.tea_id = #{teaId}
+              AND t.tea_id = r.tea_id
+              AND r.class_id = c.class_id)
+        ORDER BY stu.stu_id
+            limit #{currentPage}, #{pageSize}
+    </select>
+    <select id="teaIdTotal" resultType="int">
+        SELECT count(*)
+        FROM t_student stu
+        WHERE stu.class_id in (
+            SELECT c.class_id
+            from t_teacher t,
+                 t_relation r,
+                 t_class c
+            where t.tea_id = #{teaId}
+              AND t.tea_id = r.tea_id
+              AND r.class_id = c.class_id)
+    </select>
+    <!--  根据学生姓名和教师编号模糊查询学生信息  -->
+    <select id="selectByStuNameTeaId" resultType="top.thorns.studentScore.entity.TStudent">
+        SELECT *
+        FROM t_student stu
+        WHERE stu.class_id in (
+            SELECT c.class_id
+            from t_teacher t,
+                 t_relation r,
+                 t_class c
+            where t.tea_id = #{teaId}
+              AND t.tea_id = r.tea_id
+              AND r.class_id = c.class_id)
+          and stu.stu_name LIKE #{stuName}
+    </select>
 </mapper>

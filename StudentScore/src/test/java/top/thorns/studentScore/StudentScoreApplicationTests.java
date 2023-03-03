@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.thorns.studentScore.dto.scoreMax.language;
 import top.thorns.studentScore.entity.TClass;
 import top.thorns.studentScore.entity.TScore;
 import top.thorns.studentScore.entity.TStudent;
@@ -104,5 +105,14 @@ class StudentScoreApplicationTests {
     void classMapperTest() {
         List<TClass> list = tClassMapper.selectByTeaIdList(1);
         System.out.println(list);
+    }
+
+    @Test
+    void selectScoreMax() {
+//        ScoreMaxDto dto=new ScoreMaxDto();
+        List<language> list = tScoreMapper.selectLanguageScoreMax(1, 1);
+        list.forEach(language -> {
+            System.out.println(language.toString());
+        });
     }
 }

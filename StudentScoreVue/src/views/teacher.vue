@@ -19,7 +19,13 @@
                     <el-menu-item index="/teacher">
                         <el-icon>
                             <Discount />
-                        </el-icon>个人信息管理</el-menu-item>
+                        </el-icon>个人信息管理
+                    </el-menu-item>
+                    <el-menu-item index="/studentInfo">
+                        <el-icon>
+                            <Discount />
+                        </el-icon>学生信息查询
+                    </el-menu-item>
                     <el-sub-menu index="1">
                         <template #title>
                             <el-icon>
@@ -38,9 +44,14 @@
                             <span>统计模块</span>
                         </template>
                         <el-menu-item index="/passrate">及格率统计</el-menu-item>
-                        <el-menu-item index="2-2">平均分数统计</el-menu-item>
+                        <el-menu-item index="/TeaScoreAvg">平均分数统计</el-menu-item>
+                        <el-menu-item index="/TeaScoreMax">单科最高分统计</el-menu-item>
                     </el-sub-menu>
+                    <el-button style="width: 100%;height: 50px;" id="but" @click="deleteSession()">
+                        <a>退出登录</a>
+                    </el-button>
                 </el-menu>
+
             </div>
             <div id="main">
                 <transition name="el-zoom-in-top">
@@ -56,6 +67,7 @@ import { reactive, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router'
 import teacherApi from "../api/teacher.js";
 import { onMounted } from '@vue/runtime-core';
+import { ElMessage } from 'element-plus';
 
 // const teaId = sessionStorage.getItem("id");
 // const teacher=teacherApi.get(teaId)
@@ -78,12 +90,33 @@ const getTeacher = () => {
 
 getTeacher()
 
-
-
+const deleteSession = () => {
+    console.log("调用");
+    ElMessage.success("已经退出登录")
+    sessionStorage.removeItem("id")
+    location.reload()
+    // console.log(sessionStorage.getItem("id"));
+    
+}
 
 </script>
 
 <style scoped>
+
+#but{
+    background:
+        linear-gradient(227deg, #EBEBEB 0%, #C5C6C8 100%),
+        linear-gradient(155deg, rgba(255, 255, 255, 0.50) 5%, rgba(0, 0, 0, 0.50) 100%);
+    background-blend-mode: multiply;
+    padding: none;
+}
+a{
+    text-decoration: none;
+    color:black;
+    position: absolute;
+    left: 50px;
+    line-height: 50px;
+}
 .admin-header {
     width: 100%;
     height: 150px;

@@ -3,6 +3,7 @@ package top.thorns.studentScore.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.thorns.studentScore.dto.PassNum;
 import top.thorns.studentScore.dto.ScoreLIstDto;
+import top.thorns.studentScore.dto.ScoreMaxDto;
 import top.thorns.studentScore.entity.TScore;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface ITScoreService extends IService<TScore> {
     float[] selectPassRate(Integer examId, Integer classId);
 
     PassNum selectPassNum(Integer examId, Integer classId);
+
+    ScoreMaxDto selectScoreMax(Integer examId, Integer classId);
 }

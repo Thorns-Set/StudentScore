@@ -124,12 +124,22 @@ public class TScoreController {
     }
 
     @GetMapping("getPassNum/{examId}/{classId}")
-    public R selectPassNum(@PathVariable("examId") Integer examId,@PathVariable("classId") Integer classId){
+    public R selectPassNum(@PathVariable("examId") Integer examId, @PathVariable("classId") Integer classId) {
         return R.ok().setData(itScoreService.selectPassNum(examId, classId));
     }
 
     @GetMapping("getPassRate/{examId}/{classId}")
-    public R selectPassRate(@PathVariable("examId") Integer examId,@PathVariable("classId") Integer classId){
+    public R selectPassRate(@PathVariable("examId") Integer examId, @PathVariable("classId") Integer classId) {
         return R.ok().setData(itScoreService.selectPassRate(examId, classId));
+    }
+
+    @GetMapping("getScoreAvg/{examId}/{classId}")
+    public R selectScoreAvg(@PathVariable("examId") Integer examId, @PathVariable("classId") Integer classId) {
+        return R.ok().setData(tScoreMapper.selectScoreAvg(examId, classId));
+    }
+
+    @GetMapping("getScoreMax/{examId}/{classId}")
+    public R selectScoreMax(@PathVariable("examId") Integer examId, @PathVariable("classId") Integer classId) {
+        return R.ok().setData(itScoreService.selectScoreMax(examId, classId));
     }
 }

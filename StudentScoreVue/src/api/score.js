@@ -24,4 +24,8 @@ export default {
     selectPassNum: (examId, classId) => ajax.get(base + "getPassNum/" + examId + "/" + classId),
     //根据成绩编号和班级编号获取各科及格率
     selectPassRate: (examId, classId) => ajax.get(base + "getPassRate/" + examId + "/" + classId),
+    //根据成绩编号和班级编号获取各科平均分
+    selectScoreAvg:(examId,classId)=>ajax.get(base+"getScoreAvg/"+examId+"/"+classId),
+    //根据班级编号和考试编号查询各科最高分数
+    selectScoreMax:(examId,classId)=>ajax.get(base+"getScoreMax/"+examId+"/"+classId),
 }

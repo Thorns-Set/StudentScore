@@ -184,14 +184,146 @@
     </select>
     <!--  根据班级编号和考试编号获取各科及格率  -->
     <select id="selectPassRate" resultType="top.thorns.studentScore.dto.PassRate">
-        SELECT CONVERT(COUNT(IF(t.language_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1)) AS languagePassRate,
+        SELECT CONVERT(COUNT(IF(t.language_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL
+                       (4, 1))                                                                     AS languagePassRate,
                CONVERT(COUNT(IF(t.math_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1))  AS mathPassRate,
-               CONVERT(COUNT(IF(t.english_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1))  AS englishPassRate,
-               CONVERT(COUNT(IF(t.politics_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1)) AS politicsPassRate,
-               CONVERT(COUNT(IF(t.history_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,1))  AS historyPassRate,
+               CONVERT(COUNT(IF(t.english_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+                                                                                              1))  AS englishPassRate,
+               CONVERT(COUNT(IF(t.politics_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+                                                                                               1)) AS politicsPassRate,
+               CONVERT(COUNT(IF(t.history_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+                                                                                              1))  AS historyPassRate,
                CONVERT(COUNT(IF(t.geog_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1))  AS geogPassRate
         from t_score t
         WHERE t.class_id = #{classId}
           and t.exam_id = #{examId}
+    </select>
+    <!--  根据班级编号和考试编号查询出各科平均分数  -->
+    <select id="selectScoreAvg" resultType="top.thorns.studentScore.dto.ScoreAvgDto">
+        SELECT CONVERT(AVG(language_score), DECIMAL (4, 1)) languageScoreAvg,
+               CONVERT(AVG(math_score), DECIMAL (4, 1))     mathScoreAvg,
+               CONVERT(AVG(english_score), DECIMAL (4, 1))  englishScoreAvg,
+               CONVERT(AVG(politics_score), DECIMAL (4, 1)) politicsScoreAvg,
+               CONVERT(AVG(history_score), DECIMAL (4, 1))  historyScoreAvg,
+               CONVERT(AVG(geog_score), DECIMAL (4, 1))     geogScoreAvg,
+               CONVERT(AVG(language_score), DECIMAL (4, 1)) +
+               CONVERT(AVG(math_score), DECIMAL (4, 1)) +
+               CONVERT(AVG(english_score), DECIMAL (4, 1)) +
+               CONVERT(AVG(politics_score), DECIMAL (4, 1)) +
+               CONVERT(AVG(history_score), DECIMAL (4, 1)) +
+               CONVERT(AVG(geog_score), DECIMAL (4, 1))     totalScoreAvg
+        from t_score
+        WHERE class_id = #{classId}
+          and exam_id = #{examId}
+    </select>
+    <!--  根据班级编号和考试编号查询出总分最高  -->
+    <select id="selectTotalScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.total">
+        SELECT temp.total as totalScoreMax, temp.stu_id as totalScoreID, temp.stu_name as totalScoreName
+        from (SELECT (s.language_score + s.math_score + s.english_score + s.politics_score + s.history_score +
+                      s.geog_score) as total,
+                     stu.stu_id,
+                     stu.stu_name
+              from t_score s,
+                   t_student stu
+              WHERE s.class_id = #{classId}
+                and s.exam_id = #{examId}
+                and s.stu_id = stu.stu_id
+              GROUP BY s.score_id) as temp
+        WHERE temp.total = (SELECT MAX(flag.total)
+                            FROM (SELECT (s.language_score + s.math_score + s.english_score + s.politics_score +
+                                          s.history_score + s.geog_score) as total
+                                  from t_score s,
+                                       t_student stu
+                                  WHERE s.class_id = #{classId}
+                                    and s.exam_id = #{examId}
+                                    and s.stu_id = stu.stu_id
+                                  GROUP BY s.score_id) as flag
+        )
+    </select>
+    <!--  根据班级编号和考试编号查询出语文最高分数  -->
+    <select id="selectLanguageScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.language">
+        SELECT stu.stu_name as languageScoreName, s.language_score as languageScoreMax, s.stu_id as languageScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.language_score = (
+            SELECT max(s1.language_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
+    </select>
+    <!--  根据班级编号和考试编号查询出数学最高分数  -->
+    <select id="selectMathScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.math">
+        SELECT stu.stu_name as mathScoreName, s.math_score as mathScoreMax, s.stu_id as mathScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.math_score = (
+            SELECT max(s1.math_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
+    </select>
+    <select id="selectEnglishScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.english">
+        SELECT stu.stu_name as englishScoreName, s.english_score as englishScoreMax, s.stu_id as englishScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.english_score = (
+            SELECT max(s1.english_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
+    </select>
+    <select id="selectPoliticsScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.politics">
+        SELECT stu.stu_name as politicsScoreName, s.politics_score as politicsScoreMax, s.stu_id as politicsScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.politics_score = (
+            SELECT max(s1.politics_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
+    </select>
+    <select id="selectHistoryScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.history">
+        SELECT stu.stu_name as historyScoreName, s.history_score as historyScoreMax, s.stu_id as historyScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.history_score = (
+            SELECT max(s1.history_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
+    </select>
+    <select id="selectGeogScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.geog">
+        SELECT stu.stu_name as geogScoreName, s.geog_score as geogScoreMax, s.stu_id as geogScoreId
+        from t_score s,
+             t_student stu
+        WHERE s.class_id = #{classId}
+          and s.exam_id = #{examId}
+          and s.stu_id = stu.stu_id
+          AND s.geog_score = (
+            SELECT max(s1.geog_score)
+            from t_score s1
+            WHERE s1.class_id = #{classId}
+              and s1.exam_id = #{examId}
+        )
     </select>
 </mapper>

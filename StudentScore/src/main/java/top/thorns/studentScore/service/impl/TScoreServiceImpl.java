@@ -8,6 +8,7 @@ import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.dto.PassNum;
 import top.thorns.studentScore.dto.PassRate;
 import top.thorns.studentScore.dto.ScoreLIstDto;
+import top.thorns.studentScore.dto.ScoreMaxDto;
 import top.thorns.studentScore.entity.TScore;
 import top.thorns.studentScore.mapper.TScoreMapper;
 import top.thorns.studentScore.service.ITScoreService;
@@ -119,5 +120,16 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
         return passNum;
     }
 
+    @Override
+    public ScoreMaxDto selectScoreMax(Integer examId, Integer classId) {
+        return new ScoreMaxDto(tScoreMapper.selectTotalScoreMax(examId, classId),
+                tScoreMapper.selectLanguageScoreMax(examId, classId),
+                tScoreMapper.selectMathScoreMax(examId, classId),
+                tScoreMapper.selectEnglishScoreMax(examId, classId),
+                tScoreMapper.selectPoliticsScoreMax(examId, classId),
+                tScoreMapper.selectHistoryScoreMax(examId, classId),
+                tScoreMapper.selectGeogScoreMax(examId, classId)
+        );
+    }
 
 }

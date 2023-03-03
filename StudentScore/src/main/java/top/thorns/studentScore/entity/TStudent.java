@@ -55,7 +55,7 @@ public class TStudent implements Serializable {
     private String stuPassword;
 
     /**
-     * 学生班级
+     * 学生班级编号
      */
     private Integer classId;
 
