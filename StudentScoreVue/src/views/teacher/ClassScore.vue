@@ -308,7 +308,8 @@ var tempScore
 //表单修改方法
 const doUpdate = (list) => {
     upDialog.open = true
-    upDialog.form = list
+    //对表单传进来的数据进行深拷贝  避免表单的值跟着改变
+    upDialog.form = JSON.parse(JSON.stringify(list))
     relationApi.selectCourse(teaId, upDialog.form.scoreId)
         .then((r) => {
             if (r.data.ok) {
