@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.dto.Page;
+import top.thorns.studentScore.dto.login;
 import top.thorns.studentScore.entity.TStudent;
 import top.thorns.studentScore.mapper.TStudentMapper;
 import top.thorns.studentScore.service.ITStudentService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -55,5 +57,17 @@ public class TStudentServiceImpl extends ServiceImpl<TStudentMapper, TStudent> i
         } catch (Exception e) {
             throw new LoginException(1, "班级编号不存在，请重新修改");
         }
+    }
+
+    @Override
+    public TStudent login(login login) {
+        TStudent student = tStudentMapper.selectById(Integer.parseInt(login.getUser()));
+        if (student == null) {
+            throw new LoginException(1, "学号不存在");
+        }
+        if (!Objects.equals(login.getPassword(), student.getStuPassword())) {
+            throw new LoginException(2, "密码输入错误");
+        }
+        return student;
     }
 }

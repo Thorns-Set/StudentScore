@@ -1,6 +1,7 @@
 //引入 router
 //createRouter用于创建路由实例
 //createWebHashHistory 配置内部使用的hash 模式的路由
+import { ElMessage } from 'element-plus';
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 
@@ -25,17 +26,18 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 // ]
 
 const routes = [
-    {   
-        path:"/",
+    {
+        path: "/",
         component: () => import("../views/login.vue"),
         meta: { title: "登录页面" },
-        name:"login"
+        name: "login"
     },
 
     {
         path: '/TeaAdmin',
         component: () => import("../views/teacher.vue"),
         meta: { title: "老师管理后台", auth: true },
+        name:"tea",
         children: [
             {
                 path: "/teacher",
@@ -55,25 +57,47 @@ const routes = [
             {
                 path: "/passrate",
                 component: () => import("../views/teacher/TeaPassRateStatistics.vue"),
-                meta: { title: "及格率统计" }
+                meta: { title: "及格率统计" },
             },
             {
                 path: "/TeaScoreAvg",
                 component: () => import("../views/teacher/TeaScoreAvg.vue"),
-                meta: { title: "平均分数统计" }
+                meta: { title: "平均分数统计" },
             },
             {
                 path: "/TeaScoreMax",
                 component: () => import("../views/teacher/TeaScoreMax.vue"),
-                meta: { title: "单科最高分统计" }
+                meta: { title: "单科最高分统计" },
             },
             {
-                path:"/StudentInfo",
+                path: "/StudentInfo",
                 component: () => import("../views/teacher/StudentInfo.vue"),
-                meta: { title: "学生信息查询" }
+                meta: { title: "学生信息查询" },
             }
         ]
-    }
+    },
+    {
+        path: '/Admin',
+        component: () => import("../views/admin.vue"),
+        meta: { title: "管理员管理后台", auth: true },
+        name:"admin",
+        children: [
+            {
+                path:"/AdminClass",
+                component:()=>import("../views/admin/AdminClass.vue"),
+                meta:{title:"班级信息管理" },
+            },
+        ]
+    },
+    {
+        path: '/Student',
+        component: () => import("../views/Student.vue"),
+        name:"stu",
+        meta: { title: "学生后台", auth: true },
+        children: [
+           
+        ]
+    },
 ]
 
 //创建路由对象
@@ -83,16 +107,35 @@ const router = createRouter({
 })
 
 //路由拦截器
-router.beforeEach((to,from,next)=>{
-    // console.log(to.name)
-    // console.log(sessionStorage.getItem("id"))
-    if(sessionStorage.getItem("id")!=null || to.name=="login"){
-        next();
-    }else{
+router.beforeEach((to, from, next) => {
+    console.log(to);
+    console.log(from);
+    console.log(to.name!=from.name);
+    // //规定只能由登录页面进入其他后台模块
+    if(to.name!=undefined &&from.name!=undefined && from.name!="login" &&to.name!="login"){
+        ElMessage.error("不可跳转至其他后台模块")
+        console.log(to);
+        console.log(from);
         next({
-            path:'/'
+            path: '/'
         })
     }
+    //登录拦截器
+    if (sessionStorage.getItem("id") != null || to.name == "login") {
+        next();
+    } else{
+        next({
+            path: '/'
+        })
+    }
+    //非常规退出 将sessionStorage清空
+    //返回登录页面且sessionStorage值未清空
+    if(to.name=="login" && sessionStorage.getItem("id") != null){
+        sessionStorage.clear();
+        console.log("调用");
+    }
+
+
     next()
 })
 

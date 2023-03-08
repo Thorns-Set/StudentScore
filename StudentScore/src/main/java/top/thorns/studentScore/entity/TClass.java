@@ -1,8 +1,9 @@
 package top.thorns.studentScore.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -14,8 +15,7 @@ import java.io.Serializable;
  * @author Thorns
  * @since 2022-11-16
  */
-@Getter
-@Setter
+@Data
 @TableName("t_class")
 public class TClass implements Serializable {
 
@@ -24,6 +24,7 @@ public class TClass implements Serializable {
     /**
      * 班级编号
      */
+    @TableId(value = "class_Id", type = IdType.AUTO)
     private Integer classId;
 
     /**

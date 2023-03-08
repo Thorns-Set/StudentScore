@@ -2,6 +2,7 @@ package top.thorns.studentScore.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.thorns.studentScore.dto.Page;
+import top.thorns.studentScore.dto.login;
 import top.thorns.studentScore.entity.TStudent;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ITStudentService extends IService<TStudent> {
     List<TStudent> selectByStuNameTeaId(Integer teaId, String stuName);
 
     Integer updateByStuId(TStudent tStudent);
+
+    TStudent login(login login);
 }

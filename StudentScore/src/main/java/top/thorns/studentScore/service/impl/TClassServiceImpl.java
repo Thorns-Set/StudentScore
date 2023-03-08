@@ -36,4 +36,22 @@ public class TClassServiceImpl extends ServiceImpl<TClassMapper, TClass> impleme
 
         return list;
     }
+
+    @Override
+    public Integer deleteById(Integer classId) {
+        try {
+            return tClassMapper.deleteById(classId);
+        } catch (Exception e) {
+            throw new LoginException(1, "该班级已绑定老师信息和学生信息无法删除");
+        }
+    }
+
+    @Override
+    public TClass selectById(Integer classId) {
+        TClass tClass = tClassMapper.selectById(classId);
+        if (tClass == null) {
+            throw new LoginException(1, "该班级编号不存在，请确认没有输入错误");
+        }
+        return tClass;
+    }
 }

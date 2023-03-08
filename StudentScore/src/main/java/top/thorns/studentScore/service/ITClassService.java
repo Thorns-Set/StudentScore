@@ -16,4 +16,8 @@ import java.util.List;
 public interface ITClassService extends IService<TClass> {
 
     List<TClass> selectByTeaIdList(Integer teaId);
+
+    Integer deleteById(Integer classId);
+
+    TClass selectById(Integer classId);
 }

@@ -215,7 +215,10 @@ const selectStuScore = () => {
     ElMessage.error("请先选择考试编号")
     return
   }
-  if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {
+  if (stuName.value.indexOf(" ")!=-1) {
+    ElMessage.error("输入的查询信息不能包含空格")
+
+  } else if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {
     ElMessage.error("姓名不能为空！！！")
   } else {
     scoreApi.selectByStuNameScore(examId.value, stuName.value)

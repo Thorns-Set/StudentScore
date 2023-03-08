@@ -1,4 +1,5 @@
 <template>
+    
     <div>
         <el-card class="box-card" style="width: 1200px;">
             <template #header>
@@ -253,6 +254,10 @@ const selectStuScore = () => {
     // console.log(examId.value)
     if ((pageObj.examId == null || pageObj.examId == "") && (pageObj.classId == null || pageObj.classId == "")) {
         ElMessage.error("请先选择考试编号或成绩编号")
+        return
+    }
+    if (stuName.value.indexOf(" ")!=-1) {
+        ElMessage.error("输入的查询信息不能包含空格")
         return
     }
     if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {

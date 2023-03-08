@@ -34,5 +34,5 @@ public class TCourse implements Serializable {
      */
     private String courseName;
 
-
+    private String courseField;
 }

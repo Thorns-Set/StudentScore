@@ -115,6 +115,41 @@ const dialogData = {
 const dialog = reactive(JSON.parse(JSON.stringify(dialogData)));
 
 const doit = () => {
+  const reg_tel = new RegExp(/^(13[0-9]{9})|(15[0-9]{9})|(17[0-9]{9})|(18[0-9]{9})|(19[0-9]{9}|(14[0-9]{9}))$/)
+  const reg_emial = new RegExp(/^[A-Za-z0-9\u4e00-\u9fa5]+[._-]*[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
+  const reg_identity = new RegExp(/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]/)
+
+  //非空判断
+  if (dialog.form.teaName.split(" ").join("").length == 0) {
+    ElMessage.error("教师姓名不能为空")
+    return
+  }
+  if (dialog.form.teaIdentity.split(" ").join("").length == 0) {
+    ElMessage.error("身份证号不能为空")
+    return
+  }
+  if (dialog.form.teaName.indexOf(" ")!=-1||dialog.form.teaTel.indexOf(" ")!=-1||dialog.form.teaIdentity.indexOf(" ")!=-1||dialog.form.teaEmial.indexOf(" ")!=-1) {
+    ElMessage.error("修改后的数据格式不正确请重新修改,数据不能包含空格")
+    return
+  }
+
+  //格式判断
+  //手机号码格式判断
+  if (dialog.form.teaTel.split(" ").join("").length != 0 && !reg_tel.test(dialog.form.teaTel)) {
+    ElMessage.error("请输入正确的手机号码")
+    return
+  }
+  //对身份证号格式判断
+  if (dialog.form.teaIdentity.split(" ").join("").length != 0 && !reg_identity.test(dialog.form.teaIdentity)) {
+    ElMessage.error("请输入正确的身份证号码")
+    return
+  }
+  //对邮箱号格式判断
+  if (dialog.form.teaEmial.split(" ").join("").length != 0 && !reg_emial.test(dialog.form.teaEmial)) {
+    ElMessage.error("请输入正确的邮箱号码")
+    return
+  }
+
   teacherApi.update(dialog.form).then((r) => {
     if (r.data.ok) {
       ElMessage.success("修改成功");
@@ -168,6 +203,12 @@ const update = (passwordData) => {
   // console.log(data)
   if (passwordData.form.teaPassword != passwordData.form.flag) {
     ElMessage.error("两次填写的密码不一致")
+    return
+  }
+  if (data.password.indexOf(" ") != -1) {
+    ElMessage.error("密码不能包含空格")
+    passwordData.form.teaPassword = ""
+    passwordData.form.flag = ""
     return
   }
   teacherApi.updatePassword(data).then((r) => {

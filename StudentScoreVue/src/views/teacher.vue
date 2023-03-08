@@ -63,6 +63,7 @@
 </template>
 
 <script setup>
+
 import { reactive, ref } from '@vue/reactivity';
 import { useRoute } from 'vue-router'
 import teacherApi from "../api/teacher.js";
@@ -91,8 +92,6 @@ const getTeacher = () => {
 getTeacher()
 
 const deleteSession = () => {
-    console.log("调用");
-    ElMessage.success("已经退出登录")
     sessionStorage.removeItem("id")
     location.reload()
     // console.log(sessionStorage.getItem("id"));

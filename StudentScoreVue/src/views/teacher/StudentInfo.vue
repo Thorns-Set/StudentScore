@@ -45,7 +45,7 @@
             <el-form-item label="学生姓名">
                 <el-input v-model="upDialog.form.stuName" />
             </el-form-item>
-            <el-form-item label="学生班级">
+            <el-form-item label="学生班级编号">
                 <el-input v-model="upDialog.form.classId" />
             </el-form-item>
             <el-form-item label="学生性别">
@@ -79,6 +79,7 @@ import scoreApi from "../../api/score"
 import examApi from "../../api/exam"
 import { Search } from '@element-plus/icons-vue'
 import studentApi from '../../api/student'
+import { number } from "echarts";
 
 //接收查询出来的学生信息 并跟表格数据绑定
 const stuList = reactive({ list: [] })
@@ -110,7 +111,9 @@ const selectStuPage = () => {
 selectStuPage()
 
 const selectStuInfo = () => {
-    if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {
+    if (stuName.value.indexOf(" ")!=-1) {
+        ElMessage.error("输入的查询信息不能包含空格")
+    }else if (stuName.value == '' || stuName.value.split(" ").join("").length == 0) {
         ElMessage.error("姓名不能为空！！！")
     } else {
         studentApi.selectByStuName(teaId, stuName.value)
@@ -123,7 +126,6 @@ const selectStuInfo = () => {
                 }
             })
     }
-
 }
 
 const upDialog = reactive(
@@ -148,6 +150,8 @@ const doUpdate=(flag)=>{
 }
 
 const doit=()=>{
+
+    const reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
     const reg_tel=new RegExp(/^(13[0-9]{9})|(15[0-9]{9})|(17[0-9]{9})|(18[0-9]{9})|(19[0-9]{9}|(14[0-9]{9}))$/)
     const reg_emial=new RegExp(/^[A-Za-z0-9\u4e00-\u9fa5]+[._-]*[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)
     const reg_identity=new RegExp(/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]/)
@@ -174,7 +178,38 @@ const doit=()=>{
         ElMessage.error("学生性别不能为空") 
         return
     }
-    //再进行格式判断
+    if (upDialog.form.stuName.indexOf(" ")!=-1) {
+        ElMessage.error("修改后的学生姓名不能包含空格")
+        return
+    }
+    if (upDialog.form.classId.toString(10).indexOf(" ")!=-1) {
+        
+        ElMessage.error("修改后的班级编号不能包含空格")
+        return
+    }
+    if (upDialog.form.stuIdentity.indexOf(" ")!=-1) {
+        ElMessage.error("修改后的身份证号不能包含空格")
+        return
+    }
+    
+    if (upDialog.form.stuPassword.indexOf(" ")!=-1) {
+        ElMessage.error("修改后的密码不能包含空格")
+        return
+    }
+    if (upDialog.form.stuSex.indexOf(" ")!=-1) {
+        ElMessage.error("修改后的性别不能包含空格")
+        return
+    }
+    if (upDialog.form.stuTel.indexOf(" ")!=-1 ) {
+        ElMessage.error("修改后的电话号码不能包含空格")
+        return
+    }
+    if (upDialog.form.stuEmial.indexOf(" ")!=-1) {
+        ElMessage.error("修改后的电子邮箱号不能包含空格")
+        return
+    }
+
+    //格式判断
     if(upDialog.form.stuSex!="男"&&upDialog.form.stuSex!="女"){
         ElMessage.error("学生性别格式错误")
         return
@@ -194,12 +229,29 @@ const doit=()=>{
         ElMessage.error("请输入正确的邮箱号码") 
         return
     }
+
+    if(isNaN(Number(upDialog.form.classId))){
+        ElMessage.error("班级编号不符合格式")
+        return
+    }
+
+    if(/.*[\u4e00-\u9fa5]+.*$/.test(upDialog.form.stuPassword)){
+        ElMessage.error("密码不能含有汉字")
+        return
+    }
+    const regName=/^[\u4E00-\u9FA5]+$/;
+    if (!regName.test(upDialog.form.stuName)){
+        ElMessage.error("修改后的学生姓名只能包含汉字")
+        return 
+    }
     studentApi.updateByStuId(upDialog.form)
     .then((r)=>{
         if(r.data.ok){
             ElMessage.success("修改成功")
             upDialog.open=false
             selectStuPage()
+        }else{
+            ElMessage.error(r.data.message)
         }
     })
 }

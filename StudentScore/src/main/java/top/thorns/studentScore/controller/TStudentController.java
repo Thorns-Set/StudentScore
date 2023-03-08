@@ -24,6 +24,7 @@ import java.util.List;
 public class TStudentController {
     @Autowired
     private ITStudentService itStudentService;
+
     @Autowired
     private TStudentMapper tStudentMapper;
 
@@ -52,7 +53,7 @@ public class TStudentController {
     @PutMapping("updateStuInfo")
     public R update(@RequestBody TStudent student) {
         try {
-            return R.ok().setData(tStudentMapper.updateById(student));
+            return R.ok().setData(itStudentService.updateByStuId(student));
         } catch (LoginException e) {
             return R.error().setMessage(e.getMessage());
         }
