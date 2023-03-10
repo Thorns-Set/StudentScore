@@ -19,4 +19,57 @@
           and r.course_id = c.course_id
         GROUP BY c.course_name
     </select>
+    <!--  分页查询关联信息表  -->
+    <select id="selectPageAll" resultType="top.thorns.studentScore.dto.RelationDto">
+        select r.*, c.class_name, t.tea_name, cou.course_name
+        from t_class c,
+             t_relation r,
+             t_teacher t,
+             t_course cou
+        where r.class_id = c.class_id
+          and r.tea_id = t.tea_id
+          and r.course_id = cou.course_id
+        GROUP BY r.rel_id
+        ORDER BY r.rel_id asc
+            LIMIT #{currentPage}, #{size}
+    </select>
+    <select id="selectPageTotal" resultType="int">
+        select count(*)
+        from t_class c,
+             t_relation r,
+             t_teacher t,
+             t_course cou
+        where r.class_id = c.class_id
+          and r.tea_id = t.tea_id
+          and r.course_id = cou.course_id
+    </select>
+    <select id="selectByClassIdCourseId" resultType="top.thorns.studentScore.entity.TRelation">
+        select *
+        from t_relation
+        where class_id = #{classId}
+          and course_id = #{courseId}
+    </select>
+    <select id="selectByClassTeaId" resultType="top.thorns.studentScore.entity.TRelation">
+        select *
+        from t_relation
+        where class_id = #{classId}
+          and tea_id = #{teaId}
+    </select>
+    <select id="selectByIdList" resultType="top.thorns.studentScore.dto.RelationDto">
+        select r.*, c.class_name, t.tea_name, cou.course_name
+        from t_class c,t_relation r,t_teacher t,t_course cou
+        where r.class_id=c.class_id and
+        r.tea_id=t.tea_id and
+        r.course_id=cou.course_id
+        <if test="dto.teaId!=null">
+            and r.tea_id=#{dto.teaId}
+        </if>
+        <if test="dto.classId!=null">
+            and r.class_id=#{dto.classId}
+        </if>
+        <if test="dto.courseId!=null">
+            and r.course_id=#{dto.courseId}
+        </if>
+        ORDER BY r.rel_id asc
+    </select>
 </mapper>

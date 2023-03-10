@@ -1,5 +1,7 @@
 package top.thorns.studentScore.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +23,11 @@ public class TExam implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     /**
      * 考试编号
      */
+    @TableId(value = "exam_id", type = IdType.AUTO)
     private Integer examId;
 
     /**

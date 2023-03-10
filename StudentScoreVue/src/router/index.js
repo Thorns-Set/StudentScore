@@ -87,6 +87,21 @@ const routes = [
                 component:()=>import("../views/admin/AdminClass.vue"),
                 meta:{title:"班级信息管理" },
             },
+            {
+                path:"/AdminExam",
+                component:()=>import("../views/admin/AdminExam.vue"),
+                meta:{title:"考试信息管理" },
+            },
+            {
+                path:"/AdminRelation",
+                component:()=>import("../views/admin/AdminRelation.vue"),
+                meta:{title:"教师所教课程班级管理" },
+            },
+            {
+                path:"/AdminStu",
+                component:()=>import("../views/admin/AdminStu.vue"),
+                meta:{title:"学生信息管理" },
+            },
         ]
     },
     {

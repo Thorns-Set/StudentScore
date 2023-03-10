@@ -53,11 +53,11 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
         if (sortName != null) {
             prop = universalMethod(sortName);
         }
-        log.info("currentPage:" + currentPage);
-        log.info("examId:" + examId);
-        log.info("size:" + size);
-        log.info("prop:" + prop);
-        log.info("order:" + order);
+//        log.info("currentPage:" + currentPage);
+//        log.info("examId:" + examId);
+//        log.info("size:" + size);
+//        log.info("prop:" + prop);
+//        log.info("order:" + order);
         return tScoreMapper.scoreExamPage(examId, currentPage, size, prop, order);
     }
 

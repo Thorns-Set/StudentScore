@@ -1,6 +1,7 @@
 package top.thorns.studentScore.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.thorns.studentScore.entity.TClass;
 import top.thorns.studentScore.entity.TExam;
 
 /**
@@ -12,5 +13,7 @@ import top.thorns.studentScore.entity.TExam;
  * @since 2022-11-16
  */
 public interface ITExamService extends IService<TExam> {
+    Integer deleteById(Integer examId);
 
+    TExam selectById(Integer examId);
 }

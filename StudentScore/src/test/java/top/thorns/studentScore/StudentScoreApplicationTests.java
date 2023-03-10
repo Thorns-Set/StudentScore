@@ -10,6 +10,7 @@ import top.thorns.studentScore.entity.TScore;
 import top.thorns.studentScore.entity.TStudent;
 import top.thorns.studentScore.entity.TTeacher;
 import top.thorns.studentScore.mapper.TClassMapper;
+import top.thorns.studentScore.mapper.TExamMapper;
 import top.thorns.studentScore.mapper.TScoreMapper;
 import top.thorns.studentScore.mapper.TTeacherMapper;
 import top.thorns.studentScore.service.ITStudentService;
@@ -30,6 +31,9 @@ class StudentScoreApplicationTests {
 
     @Autowired
     private TClassMapper tClassMapper;
+
+    @Autowired
+    private TExamMapper tExamMapper;
 
     //测试mapper接口根据id查询功能
     @Test
@@ -63,7 +67,7 @@ class StudentScoreApplicationTests {
     //测试mapper接口根据id删除功能
     @Test
     void deleteTest() {
-        int flag = tTeacherMapper.deleteById(12);
+        int flag=tExamMapper.deleteById(11);
         System.out.println(flag);
     }
 

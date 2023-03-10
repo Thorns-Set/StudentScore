@@ -20,4 +20,5 @@ public interface ITClassService extends IService<TClass> {
     Integer deleteById(Integer classId);
 
     TClass selectById(Integer classId);
+
 }
