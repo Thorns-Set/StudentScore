@@ -107,13 +107,12 @@ const login = () => {
     } else if (code.value.split(" ").join("").length == 0) {
         ElMessage.error("验证码不能为空")
         return
+    }else if (code.value != codeFlag) {
+        ElMessage.error("验证码输入错误,请重新输入")
+        showCheck()
+        teacher.code = ""
+        return
     }
-    // else if (code.value != codeFlag) {
-    //     ElMessage.error("验证码输入错误,请重新输入")
-    //     showCheck()
-    //     teacher.code = ""
-    //     return
-    // }
     //根据单选框的值判断登录人员身份
     if (identity.value == "1") {
         loginApi.adminlogin(loginfo).then((r) => {
