@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.thorns.studentScore.LoginException;
+import top.thorns.studentScore.dto.Page;
+import top.thorns.studentScore.dto.selectTeaDto;
+import top.thorns.studentScore.entity.TStudent;
 import top.thorns.studentScore.entity.TTeacher;
 import top.thorns.studentScore.mapper.TTeacherMapper;
 import top.thorns.studentScore.service.ITTeacherService;
@@ -23,6 +26,8 @@ import java.util.Objects;
 public class TTeacherServiceImpl extends ServiceImpl<TTeacherMapper, TTeacher> implements ITTeacherService {
     @Autowired
     private TTeacherMapper tTeacherMapper;
+    @Autowired
+    private ITTeacherService itTeacherService;
 
     @Override
     public TTeacher login(Integer user, String password) {
@@ -54,6 +59,41 @@ public class TTeacherServiceImpl extends ServiceImpl<TTeacherMapper, TTeacher> i
         }
         //正确则修改密码
         return tTeacherMapper.updateByIdPassword(id, password);
+    }
+
+    @Override
+    public Page<TTeacher> selectByTeaIdOrTeaName(selectTeaDto dto) {
+        if (dto.getTeaName()!=null){
+            String flag = "%";
+            dto.setTeaName(flag + dto.getTeaName() + flag);
+        }
+        int currentPage = (dto.getPageNow() - 1) * dto.getSize();
+        dto.setPageNow(currentPage);
+        Page<TTeacher> page =new Page<>();
+        page.setList(tTeacherMapper.selectByTeaIdOrTeaNamePage(dto));
+        page.setTotal(tTeacherMapper.selectByTeaIdOrTeaNameTotal(dto));
+        if (page.getList().size()==0){
+            throw new LoginException(1,"没有该教师信息");
+        }
+        return page;
+    }
+
+    @Override
+    public Boolean addTeacher(TTeacher teacher) {
+        try {
+            return itTeacherService.save(teacher);
+        }catch (Exception e){
+            throw new LoginException(1,"教师编号已存在");
+        }
+    }
+
+    @Override
+    public Integer deleteByTeaId(Integer teaId) {
+        try {
+            return tTeacherMapper.deleteById(teaId);
+        }catch (Exception e){
+            throw new LoginException(1,"该教师已绑定班级和课程信息无法删除");
+        }
     }
 
 

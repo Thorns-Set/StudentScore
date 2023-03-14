@@ -11,4 +11,28 @@
         set tea_password=#{password}
         where tea_id = #{id}
     </update>
+    <!--  根据教师编号或者教师姓名分页查询  -->
+    <select id="selectByTeaIdOrTeaNamePage" resultType="top.thorns.studentScore.entity.TTeacher">
+        select *
+        from t_teacher t
+        where
+        <if test="dto.teaId!=null">
+            t.tea_id=#{dto.teaId}
+        </if>
+        <if test="dto.teaName!=null">
+            t.tea_name like #{dto.teaName}
+        </if>
+        limit #{dto.pageNow},#{dto.size}
+    </select>
+    <select id="selectByTeaIdOrTeaNameTotal" resultType="int">
+        select count(*)
+        from t_teacher t
+        where
+        <if test="dto.teaId!=null">
+            t.tea_id=#{dto.teaId}
+        </if>
+        <if test="dto.teaName!=null">
+            t.tea_name like #{dto.teaName}
+        </if>
+    </select>
 </mapper>

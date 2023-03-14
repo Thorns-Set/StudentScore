@@ -5,6 +5,7 @@
                 <div class="card-header">
                     <span>平均分数统计</span>
                     <div>
+                        <el-button @click="clear()">清除选择信息</el-button>
                         <el-select v-model="data.examId" filterable placeholder="请选择考试信息" @change="handleChange">
                             <el-option v-for="item in examInfo.list" :key="item.examId" :label="item.examName"
                                 :value="item.examId" />
@@ -46,7 +47,10 @@ import $ from 'jquery'
 import * as echarts from 'echarts'
 
 
-const teaId = parseInt(sessionStorage.getItem("id"))
+const clear = () => {
+    data.classId = ""
+    data.examId = ""
+}
 
 //接收查询出来的考试信息
 const examInfo = reactive({ list: [] })
@@ -62,9 +66,8 @@ examApi.selectAllExam().then((r) => {
 const classInfo = reactive({ list: [] })
 
 //查询班级信息
-classApi.selectByTeaIdList(teaId).then((r) => {
+classApi.selectAll().then((r) => {
     if (r.data.ok) {
-        // console.log(r.data.data)
         classInfo.list = r.data.data
     } else {
         ElMessage.error(r.data.message)
@@ -119,15 +122,11 @@ setTimeout(() => {
 
 
 const getScoreAvg=()=>{
-    if (data.classId == "") {
-        ElMessage.error("请选择班级信息")
+    if (data.classId == ""&&data.examId == "") {
+        ElMessage.error("请选择查询条件")
         return
     }
-    if (data.examId == "") {
-        ElMessage.error("请选择考试信息")
-        return
-    }
-    scoreApi.selectScoreAvg(data.examId,data.classId)
+    scoreApi.adminSelectScoreAvg(data)
     .then((r)=>{
         if(r.data.ok){
             const temp=r.data.data

@@ -3,6 +3,7 @@ package top.thorns.studentScore.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import top.thorns.studentScore.dto.selectStuDto;
 import top.thorns.studentScore.entity.TStudent;
 
 import java.util.List;
@@ -39,10 +40,18 @@ public interface TStudentMapper extends BaseMapper<TStudent> {
 
     /**
      * 根据教师编号和学生姓名模糊查询学生信息
-     *
      * @param teaId
      * @param stuName
      * @return
      */
     List<TStudent> selectByStuNameTeaId(@Param("teaId") Integer teaId, @Param("stuName") String stuName);
+
+    /**
+     * 根据班级编号或者学生姓名分页查询学生信息
+     * @param dto
+     * @return
+     */
+    List<TStudent> selectByClassOrStuName(@Param("dto") selectStuDto dto);
+
+    Integer selectByClassOrStuNameTotal(@Param("dto") selectStuDto dto);
 }

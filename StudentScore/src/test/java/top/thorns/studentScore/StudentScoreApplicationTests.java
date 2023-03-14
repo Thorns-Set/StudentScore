@@ -1,9 +1,11 @@
 package top.thorns.studentScore;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.thorns.studentScore.dto.ScoreMaxDto;
 import top.thorns.studentScore.dto.scoreMax.language;
 import top.thorns.studentScore.entity.TClass;
 import top.thorns.studentScore.entity.TScore;
@@ -15,6 +17,7 @@ import top.thorns.studentScore.mapper.TScoreMapper;
 import top.thorns.studentScore.mapper.TTeacherMapper;
 import top.thorns.studentScore.service.ITStudentService;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -118,5 +121,28 @@ class StudentScoreApplicationTests {
         list.forEach(language -> {
             System.out.println(language.toString());
         });
+    }
+    @Test
+    void qw(){
+        HashMap<String,Integer> map =new HashMap<>();
+        map.put("stu_id",1);
+        map.put("exam_id",31);
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.allEq(map);
+
+        TScore tScore=tScoreMapper.selectOne(queryWrapper);
+        System.out.println(tScore==null);
+    }
+    @Test
+    void e(){
+//        ScoreMaxDto maxDto=new ScoreMaxDto();
+//        maxDto.setGeogMaxList(tScoreMapper.selectGeogScoreMax(1, 4));
+//        System.out.println(maxDto);
+        TScore tScore=new TScore();
+        for (int i = 31,k=20171401; i <= 60; i++,k++) {
+            tScore.setScoreId(i);
+            tScore.setStuId(k);
+            tScoreMapper.updateById(tScore);
+        }
     }
 }

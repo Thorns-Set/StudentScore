@@ -171,7 +171,7 @@
     </select>
     <!--  根据班级编号和考试编号查询各科及格人数  -->
     <select id="selectPassNum" resultType="top.thorns.studentScore.dto.PassNum">
-        SELECT COUNT(*) as total,
+        SELECT COUNT(*)                                     as total,
                COUNT(IF(t.language_score > 60, TRUE, NULL)) AS languageNum,
                COUNT(IF(t.math_score > 60, TRUE, NULL))     AS mathNum,
                COUNT(IF(t.english_score > 60, TRUE, NULL))  AS englishNum,
@@ -324,6 +324,373 @@
             from t_score s1
             WHERE s1.class_id = #{classId}
               and s1.exam_id = #{examId}
+        )
+    </select>
+    <!--  管理员模块分页查询成绩  -->
+    <select id="adminSelectScore" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        SELECT
+        s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from t_score s,t_exam e,t_student stu,t_class c
+        WHERE
+        <if test="dto.examId!=null">
+            s.exam_id =#{dto.examId} and
+        </if>
+        <if test="dto.classId!=null">
+            s.class_id=#{dto.classId} and
+        </if>
+        c.class_id=s.class_id and
+        s.exam_id=e.exam_id and
+        s.stu_id=stu.stu_id
+        GROUP BY s.score_id
+        <if test="dto.order!=null and dto.order.length()>0">
+            order by ${dto.sortName} ${dto.order}
+        </if>
+        <if test="dto.order==null || dto.order.length()==0">
+            order by s.score_id ASC
+        </if>
+        limit #{dto.pageNow},#{dto.size}
+    </select>
+    <select id="adminSelectScoreTotal" resultType="int">
+        select count(*)
+        from t_score s
+        WHERE
+        <if test="dto.examId!=null and dto.classId!=null">
+            s.exam_id =#{dto.examId} and
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.examId!=null and dto.classId==null">
+            s.exam_id =#{dto.examId}
+        </if>
+    </select>
+    <!--  根据学生姓名模糊查询  -->
+    <select id="adminSelectScoreByStuName" resultType="top.thorns.studentScore.dto.ScoreLIstDto">
+        SELECT
+        s.score_id,s.stu_id,stu.stu_name,e.exam_name,c.class_name,s.language_score,s.math_score,s.english_score,s.politics_score,s.history_score,s.geog_score,SUM(s.language_score+s.math_score+s.english_score+s.politics_score+s.history_score+s.geog_score)total_points
+        from t_score s,t_exam e,t_student stu,t_class c
+        WHERE
+        <if test="dto.examId!=null">
+            s.exam_id =#{dto.examId} and
+        </if>
+        <if test="dto.classId!=null">
+            s.class_id=#{dto.classId} and
+        </if>
+        c.class_id=s.class_id and
+        s.exam_id=e.exam_id and
+        s.stu_id=stu.stu_id and
+        stu.stu_name like #{dto.stuName}
+        GROUP BY s.score_id
+    </select>
+    <!--  管理员模块及格率统计  -->
+    <select id="adminSelectPassRate" resultType="top.thorns.studentScore.dto.PassRate">
+        SELECT CONVERT(COUNT(IF(t.language_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL
+        (4, 1)) AS languagePassRate,
+        CONVERT(COUNT(IF(t.math_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1)) AS mathPassRate,
+        CONVERT(COUNT(IF(t.english_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+        1)) AS englishPassRate,
+        CONVERT(COUNT(IF(t.politics_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+        1)) AS politicsPassRate,
+        CONVERT(COUNT(IF(t.history_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4,
+        1)) AS historyPassRate,
+        CONVERT(COUNT(IF(t.geog_score > 60, TRUE, NULL)) * 100 / COUNT(*), DECIMAL (4, 1)) AS geogPassRate
+        from t_score t
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            t.class_id=#{dto.classId} and
+            t.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            t.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            t.exam_id=#{dto.examId}
+        </if>
+    </select>
+    <!-- 管理员模块及格人数统计 -->
+    <select id="adminSelectPassNum" resultType="top.thorns.studentScore.dto.PassNum">
+        SELECT COUNT(*) as total,
+        COUNT(IF(t.language_score > 60, TRUE, NULL)) AS languageNum,
+        COUNT(IF(t.math_score > 60, TRUE, NULL)) AS mathNum,
+        COUNT(IF(t.english_score > 60, TRUE, NULL)) AS englishNum,
+        COUNT(IF(t.politics_score > 60, TRUE, NULL)) AS politicsNum,
+        COUNT(IF(t.history_score > 60, TRUE, NULL)) AS historyNum,
+        COUNT(IF(t.geog_score > 60, TRUE, NULL)) AS geogNum
+        from t_score t
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            t.class_id=#{dto.classId} and
+            t.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            t.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            t.exam_id=#{dto.examId}
+        </if>
+    </select>
+    <!--  管理员模块统计各科平均分数  -->
+    <select id="adminSelectScoreAvg" resultType="top.thorns.studentScore.dto.ScoreAvgDto">
+        SELECT CONVERT(AVG(language_score), DECIMAL (4, 1)) languageScoreAvg,
+        CONVERT(AVG(math_score), DECIMAL (4, 1)) mathScoreAvg,
+        CONVERT(AVG(english_score), DECIMAL (4, 1)) englishScoreAvg,
+        CONVERT(AVG(politics_score), DECIMAL (4, 1)) politicsScoreAvg,
+        CONVERT(AVG(history_score), DECIMAL (4, 1)) historyScoreAvg,
+        CONVERT(AVG(geog_score), DECIMAL (4, 1)) geogScoreAvg,
+        CONVERT(AVG(language_score), DECIMAL (4, 1)) +
+        CONVERT(AVG(math_score), DECIMAL (4, 1)) +
+        CONVERT(AVG(english_score), DECIMAL (4, 1)) +
+        CONVERT(AVG(politics_score), DECIMAL (4, 1)) +
+        CONVERT(AVG(history_score), DECIMAL (4, 1)) +
+        CONVERT(AVG(geog_score), DECIMAL (4, 1)) totalScoreAvg
+        from t_score t
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            t.class_id=#{dto.classId} and
+            t.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            t.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            t.exam_id=#{dto.examId}
+        </if>
+    </select>
+    <!--  管理员模块根据班级编号和考试编号查询出总分最高  -->
+    <select id="adminSelectTotalScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.total">
+        SELECT temp.total as totalScoreMax, temp.stu_id as totalScoreID, temp.stu_name as totalScoreName
+        from (SELECT (s.language_score + s.math_score + s.english_score + s.politics_score + s.history_score +
+        s.geog_score) as total,
+        stu.stu_id,
+        stu.stu_name
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        GROUP BY s.score_id) as temp
+        WHERE temp.total = (SELECT MAX(flag.total)
+        FROM (SELECT (s.language_score + s.math_score + s.english_score + s.politics_score +
+        s.history_score + s.geog_score) as total
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        GROUP BY s.score_id) as flag
+        )
+    </select>
+    <!--  根据班级编号和考试编号查询出语文最高分数  -->
+    <select id="adminSelectLanguageScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.language">
+        SELECT stu.stu_name as languageScoreName, s.language_score as languageScoreMax, s.stu_id as languageScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.language_score = (
+        SELECT max(s1.language_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
+        )
+    </select>
+    <!--  根据班级编号和考试编号查询出数学最高分数  -->
+    <select id="adminSelectMathScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.math">
+        SELECT stu.stu_name as mathScoreName, s.math_score as mathScoreMax, s.stu_id as mathScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.math_score = (
+        SELECT max(s1.math_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
+        )
+    </select>
+    <select id="adminSelectEnglishScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.english">
+        SELECT stu.stu_name as englishScoreName, s.english_score as englishScoreMax, s.stu_id as englishScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.english_score = (
+        SELECT max(s1.english_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
+        )
+    </select>
+    <select id="adminSelectPoliticsScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.politics">
+        SELECT stu.stu_name as politicsScoreName, s.politics_score as politicsScoreMax, s.stu_id as politicsScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.politics_score = (
+        SELECT max(s1.politics_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
+        )
+    </select>
+    <select id="adminSelectHistoryScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.history">
+        SELECT stu.stu_name as historyScoreName, s.history_score as historyScoreMax, s.stu_id as historyScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.history_score = (
+        SELECT max(s1.history_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
+        )
+    </select>
+    <select id="adminSelectGeogScoreMax" resultType="top.thorns.studentScore.dto.scoreMax.geog">
+        SELECT stu.stu_name as geogScoreName, s.geog_score as geogScoreMax, s.stu_id as geogScoreId
+        from t_score s,
+        t_student stu
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s.class_id=#{dto.classId} and
+            s.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s.exam_id=#{dto.examId}
+        </if>
+        and s.stu_id = stu.stu_id
+        AND s.geog_score = (
+        SELECT max(s1.geog_score)
+        from t_score s1
+        WHERE
+        <if test="dto.classId!=null and dto.examId!=null">
+            s1.class_id=#{dto.classId} and
+            s1.exam_id=#{dto.examId}
+        </if>
+        <if test="dto.classId!=null and dto.examId==null">
+            s1.class_id=#{dto.classId}
+        </if>
+        <if test="dto.classId==null and dto.examId!=null">
+            s1.exam_id=#{dto.examId}
+        </if>
         )
     </select>
 </mapper>

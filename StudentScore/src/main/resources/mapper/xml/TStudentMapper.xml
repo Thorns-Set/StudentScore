@@ -42,4 +42,28 @@
               AND r.class_id = c.class_id)
           and stu.stu_name LIKE #{stuName}
     </select>
+    <!--  根据学生姓名模糊查找或根据班级编号查询  -->
+    <select id="selectByClassOrStuName" resultType="top.thorns.studentScore.entity.TStudent">
+        select *
+        from t_student s
+        where
+        <if test="dto.classId!=null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.stuName!=null">
+            s.stu_name like #{dto.stuName}
+        </if>
+        limit #{dto.pageNow},#{dto.size}
+    </select>
+    <select id="selectByClassOrStuNameTotal" resultType="int">
+        select count(*)
+        from t_student s
+        where
+        <if test="dto.classId!=null">
+            s.class_id=#{dto.classId}
+        </if>
+        <if test="dto.stuName!=null">
+            s.stu_name like #{dto.stuName}
+        </if>
+    </select>
 </mapper>

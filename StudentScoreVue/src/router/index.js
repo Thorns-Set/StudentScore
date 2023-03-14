@@ -102,6 +102,31 @@ const routes = [
                 component:()=>import("../views/admin/AdminStu.vue"),
                 meta:{title:"学生信息管理" },
             },
+            {
+                path:"/AdminTea",
+                component:()=>import("../views/admin/AdminTea.vue"),
+                meta:{title:"教师信息管理" },
+            },
+            {
+                path:"/AdminScore",
+                component:()=>import("../views/admin/AdminScore.vue"),
+                meta:{title:"全校成绩管理" },
+            },
+            {
+                path:"/AdminPassRate",
+                component:()=>import("../views/admin/AdminPassRate.vue"),
+                meta:{title:"全校成绩及格率统计" },
+            },
+            {
+                path:"/AdminScoreAvg",
+                component:()=>import("../views/admin/AdminScoreAvg.vue"),
+                meta:{title:"全校平均分数统计" },
+            },
+            {
+                path:"/AdminScoreMax",
+                component:()=>import("../views/admin/AdminScoreMax.vue"),
+                meta:{title:"全校最高分数统计" },
+            },
         ]
     },
     {
@@ -110,7 +135,41 @@ const routes = [
         name:"stu",
         meta: { title: "学生后台", auth: true },
         children: [
-           
+            {
+                path:"/StuInfo",
+                component:()=>import("../views/student/StuInfo.vue"),
+                meta:{title:"学生个人信息管理" },
+            },
+            {
+                path:"/StuCourse",
+                component:()=>import("../views/student/StuCourse.vue"),
+                meta:{title:"班级课程查询" },
+            },
+            {
+                path:"/StuScoreAll",
+                component:()=>import("../views/student/StuScoreAll.vue"),
+                meta:{title:"查询全校成绩" },
+            },
+            {
+                path:"/StuClassScore",
+                component:()=>import("../views/student/StuClassScore.vue"),
+                meta:{title:"班级成绩查询" },
+            },
+            {
+                path:"/StuPassRate",
+                component:()=>import("../views/student/StuPassRate.vue"),
+                meta:{title:"班级及格率统计" },
+            },
+            {
+                path:"/StuScoreAvg",
+                component:()=>import("../views/student/StuScoreAvg.vue"),
+                meta:{title:"班级平均分数统计" },
+            },
+            {
+                path:"/StuScoreMax",
+                component:()=>import("../views/student/StuScoreMax.vue"),
+                meta:{title:"班级最高分统计" },
+            },
         ]
     },
 ]

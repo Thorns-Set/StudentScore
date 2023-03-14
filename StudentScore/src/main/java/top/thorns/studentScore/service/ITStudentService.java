@@ -2,7 +2,9 @@ package top.thorns.studentScore.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.thorns.studentScore.dto.Page;
+import top.thorns.studentScore.dto.StuUpdatePwd;
 import top.thorns.studentScore.dto.login;
+import top.thorns.studentScore.dto.selectStuDto;
 import top.thorns.studentScore.entity.TStudent;
 
 import java.util.List;
@@ -24,4 +26,12 @@ public interface ITStudentService extends IService<TStudent> {
     Integer updateByStuId(TStudent tStudent);
 
     TStudent login(login login);
+
+    Page<TStudent> selectByClassOrStuName(selectStuDto dto);
+
+    Boolean addStudent(TStudent tStudent);
+
+    int deleteStudent(Integer stuId);
+
+    Integer updatePassword(StuUpdatePwd stuUpdatePwd);
 }

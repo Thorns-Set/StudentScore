@@ -14,4 +14,6 @@ export default{
     updateByid:(data)=>ajax.put(base+"updateClass",data),
     //根据班级编号查询班级信息
     selectByid:(classId)=>ajax.get(base+"selectByID/"+classId),
+    //查询全部班级信息
+    selectAll:()=>ajax.get(base+"selectAll"),
 }

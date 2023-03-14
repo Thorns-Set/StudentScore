@@ -75,4 +75,9 @@ public class TClassController {
             return R.error().setMessage(e.getMessage());
         }
     }
+
+    @GetMapping("selectAll")
+    public R selectAll(){
+        return R.ok().setData(itClassService.list());
+    }
 }

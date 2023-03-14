@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.dto.Page;
+import top.thorns.studentScore.dto.StuUpdatePwd;
 import top.thorns.studentScore.dto.login;
+import top.thorns.studentScore.dto.selectStuDto;
+import top.thorns.studentScore.entity.TScore;
 import top.thorns.studentScore.entity.TStudent;
+import top.thorns.studentScore.mapper.TClassMapper;
 import top.thorns.studentScore.mapper.TStudentMapper;
 import top.thorns.studentScore.service.ITStudentService;
 
@@ -26,6 +30,10 @@ public class TStudentServiceImpl extends ServiceImpl<TStudentMapper, TStudent> i
 
     @Autowired
     private TStudentMapper tStudentMapper;
+    @Autowired
+    private TClassMapper tClassMapper;
+    @Autowired
+    private ITStudentService itStudentService;
 
     @Override
     public Page<TStudent> selectStuInfoByTeaIdPage(Integer teaId, Integer size, Integer pageNow) {
@@ -45,7 +53,7 @@ public class TStudentServiceImpl extends ServiceImpl<TStudentMapper, TStudent> i
         stuName = flag + stuName + flag;
         List<TStudent> list = tStudentMapper.selectByStuNameTeaId(teaId, stuName);
         if (list.size() == 0) {
-            throw new LoginException(1, "没有该学生成绩，请检查学生姓名是否输入正确");
+            throw new LoginException(1, "没有该学生信息，请检查学生姓名是否输入正确");
         }
         return list;
     }
@@ -70,4 +78,64 @@ public class TStudentServiceImpl extends ServiceImpl<TStudentMapper, TStudent> i
         }
         return student;
     }
+
+    @Override
+    public Page<TStudent> selectByClassOrStuName(selectStuDto dto) {
+        if (dto.getStuName()!=null){
+            String flag = "%";
+            dto.setStuName(flag + dto.getStuName() + flag);
+            log.error(dto.getStuName());
+        }
+        if ( dto.getClassId()!=null && tClassMapper.selectById(dto.getClassId())==null){
+            throw new LoginException(3,"班级编号输入错误");
+        }
+        int currentPage = (dto.getPageNow() - 1) * dto.getSize();
+        dto.setPageNow(currentPage);
+        Page<TStudent> page =new Page<>();
+        page.setList(tStudentMapper.selectByClassOrStuName(dto));
+        page.setTotal(tStudentMapper.selectByClassOrStuNameTotal(dto));
+        if (page.getList().size()==0 && dto.getStuName()!=null){
+            throw new LoginException(1,"没有该学生信息，请检查学生姓名是否输入正确");
+        }else if(page.getList().size()==0 && tClassMapper.selectById(dto.getClassId())!=null){
+            throw new LoginException(2,"改班级暂无学生，请添加");
+        }
+
+        return page;
+    }
+
+    @Override
+    public Boolean addStudent(TStudent tStudent) {
+        if (tClassMapper.selectById(tStudent.getClassId())==null){
+            throw new LoginException(2,"班级编号不存在");
+        }
+        try {
+            return itStudentService.save(tStudent);
+        }catch (Exception e){
+            throw new LoginException(1,"学号已存在");
+        }
+    }
+
+    @Override
+    public int deleteStudent(Integer stuId) {
+        try {
+            return tStudentMapper.deleteById(stuId);
+        }catch (Exception e){
+            throw new LoginException(1,"该学生已录入成绩信息无法删除");
+        }
+    }
+
+    @Override
+    public Integer updatePassword(StuUpdatePwd stuUpdatePwd) {
+        TStudent temp=tStudentMapper.selectById(stuUpdatePwd.getStuId());
+        log.error(stuUpdatePwd.toString());
+        if (!Objects.equals(temp.getStuPassword(), stuUpdatePwd.getOldPassword())){
+            throw new LoginException(1,"原密码不正确");
+        }
+        if (Objects.equals(temp.getStuPassword(), stuUpdatePwd.getPassword())){
+            throw new LoginException(2,"修改后的密码与原密码不能相同");
+        }
+        temp.setStuPassword(stuUpdatePwd.getPassword());
+        return tStudentMapper.updateById(temp);
+    }
+
 }

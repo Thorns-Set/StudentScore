@@ -5,6 +5,7 @@
                 <div class="card-header">
                     <span>及格率统计</span>
                     <div>
+                        <el-button @click="clear()">清除选择信息</el-button>
                         <el-select v-model="data.examId" filterable placeholder="请选择考试信息" @change="handleChange">
                             <el-option v-for="item in examInfo.list" :key="item.examId" :label="item.examName"
                                 :value="item.examId" />
@@ -119,6 +120,7 @@
 
 
 <script setup>
+
 import { ref, onMounted, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import scoreApi from "../../api/score"
@@ -129,8 +131,6 @@ import relationApi from '../../api/relation'
 import $ from 'jquery'
 import * as echarts from 'echarts'
 
-
-const teaId = parseInt(sessionStorage.getItem("id"))
 
 //接收查询出来的考试信息
 const examInfo = reactive({ list: [] })
@@ -146,9 +146,8 @@ examApi.selectAllExam().then((r) => {
 const classInfo = reactive({ list: [] })
 
 //查询班级信息
-classApi.selectByTeaIdList(teaId).then((r) => {
+classApi.selectAll().then((r) => {
     if (r.data.ok) {
-        // console.log(r.data.data)
         classInfo.list = r.data.data
     } else {
         ElMessage.error(r.data.message)
@@ -160,6 +159,10 @@ const data = reactive({
     classId: "",
 })
 
+const clear = () => {
+    data.classId = ""
+    data.examId = ""
+}
 
 // 使用刚指定的配置项和数据显示图表。
 var myChart
@@ -216,15 +219,11 @@ setTimeout(() => {
 
 //获取及格率信息
 const getPassRate = () => {
-    if (data.classId == "") {
-        ElMessage.error("请选择班级信息")
+    if (data.classId == "" && data.examId == "") {
+        ElMessage.error("请选择查询条件")
         return
     }
-    if (data.examId == "") {
-        ElMessage.error("请选择考试信息")
-        return
-    }
-    scoreApi.selectPassRate(data.examId, data.classId)
+    scoreApi.adminSelectPassRate(data)
         .then((r) => {
             if (!r.data.ok) {
                 ElMessage.error(r.data.message)
@@ -238,12 +237,10 @@ const getPassRate = () => {
                 ]
             });
         })
-    scoreApi.selectPassNum(data.examId, data.classId)
+    scoreApi.adminSelectPassNum(data)
         .then((r) => {
-            console.log(r.data.data)
             //后端返回类型为对象，不能直接赋给list数组值
             passNum.list[0] = r.data.data
-            console.log(passNum.list[0])
             languageChart.setOption({
                 series: [
                     {

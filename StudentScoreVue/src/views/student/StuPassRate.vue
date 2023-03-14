@@ -9,10 +9,6 @@
                             <el-option v-for="item in examInfo.list" :key="item.examId" :label="item.examName"
                                 :value="item.examId" />
                         </el-select>
-                        <el-select v-model="data.classId" filterable placeholder="请选择班级信息" @change="handleChange">
-                            <el-option v-for="item in classInfo.list" :key="item.classId" :label="item.className"
-                                :value="item.classId" />
-                        </el-select>
                         <el-button @click="getPassRate()">查询</el-button>
                     </div>
                 </div>
@@ -128,9 +124,10 @@ import classApi from '../../api/class'
 import relationApi from '../../api/relation'
 import $ from 'jquery'
 import * as echarts from 'echarts'
+import stuApi from '../../api/student'
 
 
-const teaId = parseInt(sessionStorage.getItem("id"))
+const stuId = parseInt(sessionStorage.getItem("id"))
 
 //接收查询出来的考试信息
 const examInfo = reactive({ list: [] })
@@ -142,18 +139,17 @@ examApi.selectAllExam().then((r) => {
     // console.log(examInfo.list)
 })
 
-//接收查询出来的班级信息
-const classInfo = reactive({ list: [] })
+const getclassID = () => {
+    stuApi.selectById(stuId)
+        .then((r) => {
+            data.classId = r.data.data.classId
+        })
+}
 
-//查询班级信息
-classApi.selectByTeaIdList(teaId).then((r) => {
-    if (r.data.ok) {
-        // console.log(r.data.data)
-        classInfo.list = r.data.data
-    } else {
-        ElMessage.error(r.data.message)
-    }
-})
+setTimeout(() => {
+    getclassID()
+}, 1);
+
 
 const data = reactive({
     examId: "",
@@ -216,10 +212,6 @@ setTimeout(() => {
 
 //获取及格率信息
 const getPassRate = () => {
-    if (data.classId == "") {
-        ElMessage.error("请选择班级信息")
-        return
-    }
     if (data.examId == "") {
         ElMessage.error("请选择考试信息")
         return

@@ -28,4 +28,24 @@ export default {
     selectScoreAvg:(examId,classId)=>ajax.get(base+"getScoreAvg/"+examId+"/"+classId),
     //根据班级编号和考试编号查询各科最高分数
     selectScoreMax:(examId,classId)=>ajax.get(base+"getScoreMax/"+examId+"/"+classId),
+
+    /**
+     * 管理员模块
+     */
+    //根据班级编号、考试编号分页查询成绩信息
+    adminSelectScore:(data)=>ajax.post(base+"adminSelectScore",data),
+    //根据姓名模糊查询
+    adminSelectByStuName:(data)=>ajax.post(base+"adminSelectScoreByStuName",data),
+    //添加考试成绩
+    addScore:(data)=>ajax.post(base+"addScore",data),
+    //根据成绩编号删除成绩
+    deleteById:(scoreId)=>ajax.delete(base+"deleteScore/"+scoreId),
+    //根据成绩编号或者考试编号统计成绩及格率
+    adminSelectPassRate:(data)=>ajax.post(base+"adminSelectPassRate",data),
+    //根据成绩编号或者考试编号统计成绩及格率
+    adminSelectPassNum:(data)=>ajax.post(base+"adminSelectPassNum",data),
+    //统计全校平均分数
+    adminSelectScoreAvg:(data)=>ajax.post(base+"adminSelectScoreAvg",data),
+    //统计全校最高分数
+    adminSelectScoreMax:(data)=>ajax.post(base+"adminSelectScoreMax",data),
 }

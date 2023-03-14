@@ -38,4 +38,8 @@ public class ScoreMaxDto {
         this.historyMaxList = historyMaxList;
         this.geogMaxList = geogMaxList;
     }
+
+    public ScoreMaxDto() {
+
+    }
 }

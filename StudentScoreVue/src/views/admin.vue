@@ -36,26 +36,26 @@
                             <Discount />
                         </el-icon>学生信息管理
                     </el-menu-item>
+                    <el-menu-item index="/AdminTea">
+                        <el-icon>
+                            <Discount />
+                        </el-icon>教师信息管理
+                    </el-menu-item>
+                    <el-menu-item index="/AdminScore">
+                        <el-icon>
+                            <Discount />
+                        </el-icon>全校成绩管理
+                    </el-menu-item>
                     <el-sub-menu index="1">
-                        <template #title>
-                            <el-icon>
-                                <Setting />
-                            </el-icon>
-                            <span>成绩模块</span>
-                        </template>
-                        <el-menu-item index="/role">全校成绩查询</el-menu-item>
-                        <el-menu-item index="/user">班级成绩管理</el-menu-item>
-                    </el-sub-menu>
-                    <el-sub-menu index="2">
                         <template #title>
                             <el-icon>
                                 <User />
                             </el-icon>
                             <span>统计模块</span>
                         </template>
-                        <el-menu-item index="/passrate">及格率统计</el-menu-item>
-                        <el-menu-item index="/TeaScoreAvg">平均分数统计</el-menu-item>
-                        <el-menu-item index="/TeaScoreMax">单科最高分统计</el-menu-item>
+                        <el-menu-item index="/AdminPassRate">全校及格率统计</el-menu-item>
+                        <el-menu-item index="/AdminScoreAvg">平均分数统计</el-menu-item>
+                        <el-menu-item index="/AdminScoreMax">单科最高分统计</el-menu-item>
                     </el-sub-menu>
                     <el-button style="width: 100%;height: 50px;" id="but" @click="deleteSession()">
                         <a>退出登录</a>

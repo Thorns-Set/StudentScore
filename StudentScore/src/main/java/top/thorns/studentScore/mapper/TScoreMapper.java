@@ -3,10 +3,7 @@ package top.thorns.studentScore.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.thorns.studentScore.dto.PassNum;
-import top.thorns.studentScore.dto.PassRate;
-import top.thorns.studentScore.dto.ScoreAvgDto;
-import top.thorns.studentScore.dto.ScoreLIstDto;
+import top.thorns.studentScore.dto.*;
 import top.thorns.studentScore.dto.scoreMax.*;
 import top.thorns.studentScore.entity.TScore;
 
@@ -24,7 +21,6 @@ import java.util.List;
 public interface TScoreMapper extends BaseMapper<TScore> {
     /**
      * 根据考试编号分页查询考试成绩
-     *
      * @param examId
      * @param currentPage
      * @param size
@@ -34,7 +30,6 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 查询分页总记录数
-     *
      * @param examId
      * @return
      */
@@ -88,7 +83,6 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据学生姓名班级编号成绩编号查询信息
-     *
      * @param stuName
      * @param examId
      * @param classId
@@ -98,7 +92,6 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据成绩编号获取班级编号
-     *
      * @param scoreId
      * @return
      */
@@ -168,7 +161,6 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据班级编号和考试编号查询出英语最高成绩
-     *
      * @param examId
      * @param classId
      * @return
@@ -177,7 +169,6 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据班级编号和考试编号查询出政治最高成绩
-     *
      * @param examId
      * @param classId
      * @return
@@ -195,11 +186,102 @@ public interface TScoreMapper extends BaseMapper<TScore> {
 
     /**
      * 根据班级编号和考试编号查询出地理最高成绩
-     *
      * @param examId
      * @param classId
      * @return
      */
     List<geog> selectGeogScoreMax(@Param("examId") Integer examId, @Param("classId") Integer classId);
 
+//管理员模块没有选择班级信息时 根据考试编号查询出所有成绩信息，对班级编号没有限制   教师模块则对班级编号有所限制
+
+    /**
+     * 管理员模块根据班级编号或者考试编号分页查询成绩信息，当有排序字段传入时对成绩信息进行排序
+     * @param dto
+     * @return
+     */
+    List<ScoreLIstDto> adminSelectScore(@Param("dto")AdminSelectScoreDto dto);
+    Integer adminSelectScoreTotal(@Param("dto")AdminSelectScoreDto dto);
+
+    /**
+     * 根据学生姓名模糊查询
+     * @param dto
+     * @return
+     */
+    List<ScoreLIstDto> adminSelectScoreByStuName(@Param("dto")AdminSelectScoreDto dto);
+
+    /**
+     * 管理员模块统计及格率
+     * @param selectStatistics
+     * @return
+     */
+    PassRate adminSelectPassRate(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 管理员模块统计及格人数
+     *
+     * @param selectStatistics
+     * @return
+     */
+    PassNum adminSelectPassNum(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 管理员模块统计各科平均分数
+     * @param selectStatistics
+     * @return
+     */
+    ScoreAvgDto adminSelectScoreAvg(@Param("dto") selectStatistics selectStatistics);
+
+
+    /**
+     * 根据班级编号和考试编号查询出语文最高成绩
+     *
+     * @param selectStatistics
+     * @return
+     */
+    List<language> adminSelectLanguageScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出数学最高成绩
+     *
+     * @param selectStatistics
+     * @return
+     */
+    List<math> adminSelectMathScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出总最高成绩
+     *
+     * @param selectStatistics
+     * @return
+     */
+    List<total> adminSelectTotalScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出英语最高成绩
+     * @param selectStatistics
+     * @return
+     */
+    List<english> adminSelectEnglishScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出政治最高成绩
+     * @param selectStatistics
+     * @return
+     */
+    List<politics> adminSelectPoliticsScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出历史最高成绩
+     *
+     * @param selectStatistics
+     * @return
+     */
+    List<history> adminSelectHistoryScoreMax(@Param("dto") selectStatistics selectStatistics);
+
+    /**
+     * 根据班级编号和考试编号查询出地理最高成绩
+     * @param selectStatistics
+     * @return
+     */
+    List<geog> adminSelectGeogScoreMax(@Param("dto") selectStatistics selectStatistics);
 }
