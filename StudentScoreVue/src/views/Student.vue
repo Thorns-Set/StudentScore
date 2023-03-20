@@ -34,7 +34,7 @@
                             <span>成绩模块</span>
                         </template>
                         <el-menu-item index="/StuScoreAll">全校成绩查询</el-menu-item>
-                        <el-menu-item index="/StuClassScore">班级成绩管理</el-menu-item>
+                        <el-menu-item index="/StuClassScore">班级成绩查询</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="2">
                         <template #title>

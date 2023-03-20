@@ -7,4 +7,6 @@ export default {
     adminlogin:(data)=>ajax.post(base+"adminLogin",data),
     //学生登录验证
     stulogin:(data)=>ajax.post(base+"stuLogin",data),
+    //修改管理员密码
+    adminUpdatePwd:(data)=>ajax.post(base+"adminUpdatePwd",data),
 }

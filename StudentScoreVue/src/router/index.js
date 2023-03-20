@@ -127,6 +127,11 @@ const routes = [
                 component: () => import("../views/admin/AdminScoreMax.vue"),
                 meta: { title: "全校最高分数统计" },
             },
+            {
+                path: "/AdminPassword",
+                component: () => import("../views/admin/AdminPassword.vue"),
+                meta: { title: "修改密码" },
+            },
         ]
     },
     {

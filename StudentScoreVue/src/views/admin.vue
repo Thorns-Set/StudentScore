@@ -41,6 +41,11 @@
                             <Discount />
                         </el-icon>教师信息管理
                     </el-menu-item>
+                    <el-menu-item index="/AdminPassword">
+                        <el-icon>
+                            <Discount />
+                        </el-icon>修改密码
+                    </el-menu-item>
                     <el-menu-item index="/AdminScore">
                         <el-icon>
                             <Discount />

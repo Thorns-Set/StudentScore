@@ -21,11 +21,11 @@
             </template>
             <el-table :data="stuList.list" style="width: 100%" @sort-change="sortTable">
                 <!-- pror要跟传递过来的数据字段名相同 -->
-                <el-table-column prop="stuId" label="学号" width="70" />
-                <el-table-column prop="stuName" label="学生姓名" width="100" />
+                <el-table-column prop="stuId" label="学号" width="110" />
+                <el-table-column prop="stuName" label="学生姓名" width="90" />
                 <el-table-column prop="classId" label="学生班级编号" width="110" />
-                <el-table-column prop="stuSex" label="学生性别" width="100" />
-                <el-table-column prop="stuTel" label="电话号码" width="160" />
+                <el-table-column prop="stuSex" label="学生性别" width="90" />
+                <el-table-column prop="stuTel" label="电话号码" width="150" />
                 <el-table-column prop="stuEmial" label="邮箱号" width="250" />
                 <el-table-column prop="stuIdentity" label="身份证号码" width="200" />
                 <el-table-column prop="stuPassword" label="学生密码" width="120" />
@@ -477,7 +477,7 @@ const add = () => {
         return
     }
 
-    if (isNaN(Number(addDialog.form.stuId))) {
+    if (isNaN(Number(addDialog.form.stuId))||addDialog.form.stuId.length!=8) {
         ElMessage.error("学号不符合格式")
         return
     }

@@ -14,7 +14,7 @@ export default defineConfig({
     proxy: {
       //这里是通过请求/api 来转发到 http://127.0.0.1:88/
       "/api":{
-        target:'http://127.0.0.1:8080/',
+        target:'http://127.0.0.1:8669/',
         changeOrigin:true,
         cookiePathRewrite:{
           '^/api':''

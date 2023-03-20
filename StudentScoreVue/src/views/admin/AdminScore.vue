@@ -106,7 +106,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="upDialog.open = false">关闭</el-button>
-                <el-button type="primary" @click="doit()">修改</el-button>
+                <el-button type="primary" @click="doit()">确定</el-button>
             </span>
         </template>
     </el-dialog>
@@ -153,7 +153,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="addDialog.open = false">关闭</el-button>
-                <el-button type="primary" @click="add()">添加</el-button>
+                <el-button type="primary" @click="add()">确定</el-button>
             </span>
         </template>
     </el-dialog>
@@ -200,7 +200,7 @@ const adminId = parseInt(sessionStorage.getItem("id"))
 
 //选择考试编号和班级编号模态框基础值
 const dialog = {
-    open: true,
+    open: false,
     title: "请选择具体考试信息和班级信息",
     readonly: false,
 };
@@ -255,7 +255,7 @@ const selectByExamIdClassId = () => {
     pageObj.pageNow = 1
     console.log(pageObj)
     if ((pageObj.examId == null || pageObj.examId == "") && (pageObj.classId == null || pageObj.classId == "")) {
-        ElMessage.error("请先选择考试编号或班级编号")
+        ElMessage.error("请先选择考试名称或班级名称")
     } else {
         scorePage()
     }

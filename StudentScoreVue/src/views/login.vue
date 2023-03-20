@@ -40,9 +40,9 @@ var codeFlag = "";
 //生成验证码位数为四
 function createCode() {
     codeFlag = "";
-    var selectChar = new Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    var selectChar = new Array(0,1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i','j', 'k', 'l', 'm', 'n', 'p', 'o','q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
     for (var i = 0; i < 4; i++) {
-        var charIndex = Math.floor(Math.random() * 60);
+        var charIndex = Math.floor(Math.random() * 37);
         codeFlag += selectChar[charIndex];
     }
     if (codeFlag.length != 4) {
@@ -113,6 +113,10 @@ const login = () => {
         teacher.code = ""
         return
     }
+    if ((identity.value == "2" || identity.value == "3")&& isNaN(Number(loginfo.user))) {
+        ElMessage.error("登录编号格式错误")
+        return  
+    }
     //根据单选框的值判断登录人员身份
     if (identity.value == "1") {
         loginApi.adminlogin(loginfo).then((r) => {
@@ -122,7 +126,7 @@ const login = () => {
                 // console.log(flag)
                 //将当前登录对象信息传送到系统页面
                 sessionStorage.setItem("id", id)
-                router.push('/Admin')
+                router.push('/AdminClass')
                 sessionStorage.setItem("name","admin")
             }else {
                 ElMessage.error(r.data.message)
@@ -136,7 +140,7 @@ const login = () => {
                 // console.log(flag)
                 //将当前登录对象信息传送到系统页面
                 sessionStorage.setItem("id", id)
-                router.push('/TeaAdmin')
+                router.push('/teacher')
                 sessionStorage.setItem("name","tea")
             } else {
                 ElMessage.error(r.data.message)
@@ -152,7 +156,7 @@ const login = () => {
                 //将当前登录对象信息传送到系统页面
                 sessionStorage.setItem("id", id)
                 sessionStorage.setItem("name","stu")
-                router.push('/Student')
+                router.push('/StuInfo')
             }else {
                 ElMessage.error(r.data.message)
             }
@@ -253,7 +257,7 @@ canvas {
     width: 50px;
     height: 35px;
     position: relative;
-    top: -70px;
-    right: -220px;
+    top: -18%;
+    right: -55%;
 }
 </style>
