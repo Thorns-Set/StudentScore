@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import top.thorns.studentScore.dto.*;
 import top.thorns.studentScore.dto.scoreMax.*;
 import top.thorns.studentScore.entity.TScore;
+import top.thorns.studentScore.service.ITScoreService;
 
 import java.util.List;
 

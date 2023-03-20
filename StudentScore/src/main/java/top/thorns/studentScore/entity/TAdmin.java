@@ -29,4 +29,9 @@ public class TAdmin implements Serializable {
      * 管理员密码
      */
     private String adminPassword;
+
+    public TAdmin(String adminId, String adminPassword) {
+        this.adminId = adminId;
+        this.adminPassword = adminPassword;
+    }
 }

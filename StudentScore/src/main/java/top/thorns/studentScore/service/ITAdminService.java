@@ -1,6 +1,7 @@
 package top.thorns.studentScore.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.thorns.studentScore.dto.adminPasswordDTO;
 import top.thorns.studentScore.dto.login;
 import top.thorns.studentScore.entity.TAdmin;
 
@@ -14,4 +15,6 @@ import top.thorns.studentScore.entity.TAdmin;
 public interface ITAdminService extends IService<TAdmin> {
 
     TAdmin login(login login);
+
+    int updatePwd(adminPasswordDTO dto);
 }

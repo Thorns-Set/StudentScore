@@ -66,7 +66,7 @@ public class TRelationServiceImpl extends ServiceImpl<TRelationMapper, TRelation
         }
         try {
             return itRelationService.save(tRelation);
-        }catch (LoginException e){
+        }catch (Exception e){
             throw new LoginException(6,"关联id已存在不能重复");
         }
 

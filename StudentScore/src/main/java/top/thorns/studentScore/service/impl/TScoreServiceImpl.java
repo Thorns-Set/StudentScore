@@ -193,7 +193,7 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
         }
         TStudent student = tStudentMapper.selectById(tScore.getStuId());
         if (student == null) {
-            throw new LoginException(3, "学生编号输入错误");
+            throw new LoginException(3, "学生编号不存在");
         }
         if (!Objects.equals(student.getClassId(), tScore.getClassId())) {
             throw new LoginException(4, "学生所对应班级错误，请修改");
@@ -205,8 +205,14 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
     public float[] adminSelectPassRate(selectStatistics selectStatistics) {
         PassRate passRate = tScoreMapper.adminSelectPassRate(selectStatistics);
 //        将对象类型数据转换为数组
-        if (passRate == null) {
+        if (passRate == null && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()!=null) {
             throw new LoginException(1, "该班级此次考试暂无成绩信息，无法统计");
+        }
+        if (passRate == null && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()==null) {
+            throw new LoginException(1, "该班级暂无成绩信息，无法统计");
+        }
+        if (passRate == null && selectStatistics.getClassId()==null &&selectStatistics.getExamId()!=null) {
+            throw new LoginException(1, "此次考试暂无成绩信息，无法统计");
         }
         float[] arr = new float[6];
         arr[0] = passRate.getLanguagePassRate();
@@ -221,9 +227,7 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
     @Override
     public PassNum adminSelectPassNum(selectStatistics selectStatistics) {
         PassNum passNum = tScoreMapper.adminSelectPassNum(selectStatistics);
-        if (passNum == null) {
-            throw new LoginException(1, "该班级此次考试暂无成绩信息，无法统计");
-        }
+
         //通过总数和及格人数分别计算出各科不及格人数
         passNum.setGeogFlunk(passNum.getTotal() - passNum.getGeogNum());
         passNum.setLanguageFlunk(passNum.getTotal() - passNum.getLanguageNum());
@@ -237,16 +241,29 @@ public class TScoreServiceImpl extends ServiceImpl<TScoreMapper, TScore> impleme
     @Override
     public ScoreAvgDto adminSelectScoreAvg(selectStatistics selectStatistics) {
         ScoreAvgDto dto = tScoreMapper.adminSelectScoreAvg(selectStatistics);
-        if (dto == null) {
+        if (dto == null && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()!=null) {
             throw new LoginException(1, "该班级此次考试暂无成绩信息，无法统计");
+        }
+        if (dto == null && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()==null) {
+            throw new LoginException(1, "该班级暂无成绩信息，无法统计");
+        }
+        if (dto == null && selectStatistics.getClassId()==null &&selectStatistics.getExamId()!=null) {
+            throw new LoginException(1, "此次考试暂无成绩信息，无法统计");
         }
         return dto;
     }
 
     @Override
     public ScoreMaxDto adminSelectMax(selectStatistics selectStatistics) {
-        if (tScoreMapper.adminSelectTotalScoreMax(selectStatistics).size()==0){
+        int flag=tScoreMapper.adminSelectTotalScoreMax(selectStatistics).size();
+        if (flag == 0 && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()!=null) {
             throw new LoginException(1, "该班级此次考试暂无成绩信息，无法统计");
+        }
+        if (flag == 0 && selectStatistics.getClassId()!=null &&selectStatistics.getExamId()==null) {
+            throw new LoginException(1, "该班级暂无成绩信息，无法统计");
+        }
+        if (flag == 0 && selectStatistics.getClassId()==null &&selectStatistics.getExamId()!=null) {
+            throw new LoginException(1, "此次考试暂无成绩信息，无法统计");
         }
         return new ScoreMaxDto(tScoreMapper.adminSelectTotalScoreMax(selectStatistics),
                 tScoreMapper.adminSelectLanguageScoreMax(selectStatistics),

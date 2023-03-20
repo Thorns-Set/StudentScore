@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.thorns.studentScore.LoginException;
+import top.thorns.studentScore.dto.adminPasswordDTO;
 import top.thorns.studentScore.dto.login;
 import top.thorns.studentScore.entity.TAdmin;
 import top.thorns.studentScore.mapper.TAdminMapper;
@@ -34,5 +35,14 @@ public class TAdminServiceImpl extends ServiceImpl<TAdminMapper, TAdmin> impleme
             throw new LoginException(2, "密码错误");
         }
         return tAdmin;
+    }
+
+    @Override
+    public int updatePwd(adminPasswordDTO dto) {
+        TAdmin tAdmin = new TAdmin(dto.getId(),dto.getPassword());
+        if (!Objects.equals(dto.getOldPassword(), tAdminMapper.selectById(dto.getId()).getAdminPassword())){
+            throw new LoginException(1,"原密码错误");
+        }
+        return tAdminMapper.updateById(tAdmin);
     }
 }

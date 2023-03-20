@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.thorns.studentScore.LoginException;
 import top.thorns.studentScore.R;
+import top.thorns.studentScore.dto.adminPasswordDTO;
 import top.thorns.studentScore.dto.login;
 import top.thorns.studentScore.entity.TTeacher;
 import top.thorns.studentScore.service.ITAdminService;
@@ -80,6 +81,15 @@ public class LoginController {
     public R stuLogin(@RequestBody login login) {
         try {
             return R.ok().setData(itStudentService.login(login));
+        } catch (LoginException e) {
+            return R.error().setMessage(e.getMessage());
+        }
+    }
+
+    @PostMapping("adminUpdatePwd")
+    public R adminPassword(@RequestBody adminPasswordDTO dto){
+        try {
+            return R.ok().setData(itAdminService.updatePwd(dto));
         } catch (LoginException e) {
             return R.error().setMessage(e.getMessage());
         }

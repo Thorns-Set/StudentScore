@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("api/t-class")
-public class TClassController {
+public class TClassController extends LoginController {
 
     @Autowired
     private ITClassService itClassService;
